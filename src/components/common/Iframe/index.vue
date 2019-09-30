@@ -1,6 +1,11 @@
 <template>
   <div class="iframe-container">
-    <iframe :src="src" scrolling="auto" frameborder="0" class="frame" />
+    <iframe
+      :src="src"
+      scrolling="auto"
+      frameborder="0"
+      class="frame"
+    />
   </div>
 </template>
 
@@ -11,13 +16,12 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 })
 
 export default class extends Vue {
-  @Prop({default: ''}) private url!:string
+  @Prop({ default: '' }) private url!:string
   private src:string = ''
 
-  @Watch('url', {immediate:true})
-  private onUrlChange(newValue:string){
+  @Watch('url', { immediate: true })
+  private onUrlChange(newValue:string) {
     this.resetSrc(newValue)
-
   }
   private resetSrc(url:string):void {
     this.src = url

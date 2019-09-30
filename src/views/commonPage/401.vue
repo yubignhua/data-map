@@ -7,7 +7,9 @@
           Oops! 401
         </h1>
         <h2>你没有权限去该页面</h2>
-        <h3 style="margin-top:5px">如有不满请联系曹逾老师</h3>
+        <h3 style="margin-top:5px">
+          如有不满请联系曹逾老师
+        </h3>
         <ul class="list-unstyled">
           <li class="link-type">
             <router-link to="/mainboard/mainboard">

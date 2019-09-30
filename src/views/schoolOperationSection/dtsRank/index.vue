@@ -2,8 +2,14 @@
   <div class="dts_rank_container">
     <div class="dts_title_box">
       <div class="dts_title">
-        <h2 class="main_board_title">机构排名</h2>
-        <el-select v-model="value2" placeholder="请选择" @change="onSelectChange2">
+        <h2 class="main_board_title">
+          机构排名
+        </h2>
+        <el-select
+          v-model="value2"
+          placeholder="请选择"
+          @change="onSelectChange2"
+        >
           <el-option
             v-for="item in options2"
             :key="item.value"
@@ -11,7 +17,11 @@
             :value="item.value"
           />
         </el-select>
-        <el-select v-model="value" placeholder="请选择" @change="onSelectChange">
+        <el-select
+          v-model="value"
+          placeholder="请选择"
+          @change="onSelectChange"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -20,7 +30,12 @@
           />
         </el-select>
       </div>
-      <el-button type="primary" @click="onExport">导出Excel</el-button>
+      <el-button
+        type="primary"
+        @click="onExport"
+      >
+        导出Excel
+      </el-button>
     </div>
 
     <div class="main_board_content">
@@ -33,25 +48,45 @@
           style="width: 100%"
           @sort-change="onSortChange"
         >
-          <el-table-column prop="index" label="排名" align="center" />
-          <el-table-column prop="school_name" label="机构名称" align="center" />
-          <el-table-column prop="students" label="学员人次" sortable="custom" align="center" />
-          <el-table-column prop="signup_students" label="报名人数" sortable="custom" align="center" />
           <el-table-column
-            prop="class_classrooms"
+            prop="index"
+            label="排名"
+            align="center"
+          />
+          <el-table-column
+            prop="school_name"
+            label="机构名称"
+            align="center"
+          />
+          <el-table-column
+            prop="students"
+            label="学员人次"
+            sortable="custom"
+            align="center"
+          />
+          <el-table-column
+            prop="signup_students"
+            label="报名人数"
+            sortable="custom"
+            align="center"
+          />
+          <el-table-column
             v-if="value2!=='live_ai'"
+            prop="class_classrooms"
             label="上课教室数"
             sortable="custom"
             align="center"
           />
           <el-table-column
+            v-if="value2!=='live_ai'"
             prop="students_div_classrooms"
             label="教室效率"
-            v-if="value2!=='live_ai'"
             sortable="custom"
             align="center"
           >
-            <template slot-scope="scope">{{Number(scope.row.students_div_classrooms).toFixed(2)}}</template>
+            <template slot-scope="scope">
+              {{ Number(scope.row.students_div_classrooms).toFixed(2) }}
+            </template>
           </el-table-column>
         </el-table>
       </template>
@@ -136,11 +171,12 @@ export default class extends Vue {
       type: configMap[type]
     })
     const { data, ok, message } = resData
-    if (!ok)
+    if (!ok) {
       return this.$message({
         message: message || '网络错误',
         type: 'error'
       })
+    }
     this.value = JSON.stringify({
       term: data[0].term,
       year: data[0].year,
@@ -166,16 +202,17 @@ export default class extends Vue {
       message,
       data: { total, current_page, data }
     } = resData
-    if (!ok)
+    if (!ok) {
       return this.$message({
         message: message || '网络错误',
         type: 'error'
       })
+    }
     this.loading = false
     this.tableData = data
     this.totalPage = total
     this.$nextTick(() => {
-      ;(this.$refs.table as any).bodyWrapper.scrollTop = 0
+      (this.$refs.table as any).bodyWrapper.scrollTop = 0
     })
   }
 

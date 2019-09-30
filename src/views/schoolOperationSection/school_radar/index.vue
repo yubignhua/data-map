@@ -8,8 +8,12 @@
             <h2>机构雷达</h2>
           </div>
           <div class="selected_box">
-            <div>数据更新于: {{date || '0000-00-00'}}</div>
-            <el-select v-model="value1" placeholder="请选择" @change="onSelectChange1">
+            <div>数据更新于: {{ date || '0000-00-00' }}</div>
+            <el-select
+              v-model="value1"
+              placeholder="请选择"
+              @change="onSelectChange1"
+            >
               <el-option
                 v-for="item in options1"
                 :key="item.value"
@@ -17,7 +21,11 @@
                 :value="item.value"
               />
             </el-select>
-            <el-select v-model="value2" placeholder="请选择" @change="onSelectChange2">
+            <el-select
+              v-model="value2"
+              placeholder="请选择"
+              @change="onSelectChange2"
+            >
               <el-option
                 v-for="item in options2"
                 :key="item.value"
@@ -30,26 +38,35 @@
         <div class="search_input_box">
           <el-input
             v-model="redarParams.keyword"
-            @change="onInputChange"
-            @keyup.enter.native="onSearch"
             placeholder="请输入内容"
             prefix-icon="el-icon-search"
             clearable
+            @change="onInputChange"
+            @keyup.enter.native="onSearch"
           />
-          <el-button type="defalut" @click="onSearch">搜索</el-button>
+          <el-button
+            type="defalut"
+            @click="onSearch"
+          >
+            搜索
+          </el-button>
         </div>
       </div>
       <!-- 表单 -->
       <el-table
         ref="table"
-        :height="tableHeight"
         v-loading="loading"
+        :height="tableHeight"
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column align="center" prop="school_name" label="机构名称" />
         <el-table-column
-          v-if="[4].includes(this.redarParams.type)"
+          align="center"
+          prop="school_name"
+          label="机构名称"
+        />
+        <el-table-column
+          v-if="[4].includes(redarParams.type)"
           v-show="false"
           align="center"
           label="规模"
@@ -60,57 +77,99 @@
             label="当期教材消耗"
           />
         </el-table-column>
-        <el-table-column v-if="[1,2].includes(this.redarParams.type)" align="center" label="规模">
-          <el-table-column align="center" prop="students" label="人次" />
-          <el-table-column align="center" prop="org_classes" label="教学班" />
+        <el-table-column
+          v-if="[1,2].includes(redarParams.type)"
+          align="center"
+          label="规模"
+        >
           <el-table-column
-            v-if="[1,4].includes(this.redarParams.type)"
+            align="center"
+            prop="students"
+            label="人次"
+          />
+          <el-table-column
+            align="center"
+            prop="org_classes"
+            label="教学班"
+          />
+          <el-table-column
+            v-if="[1,4].includes(redarParams.type)"
             align="center"
             prop="book_consume"
-            :label="[1].includes(this.redarParams.type)?'当期教材消耗':'教材消耗'"
-            
+            :label="[1].includes(redarParams.type)?'当期教材消耗':'教材消耗'"
           />
         </el-table-column>
-        <el-table-column v-if="this.redarParams.type !== 4" align="center" label="效率">
-          <el-table-column align="center" prop="full_class_rate" label="满班率(%)" />
-          <el-table-column align="center" prop="classroom_rate" label="教室效率" />
-        </el-table-column>
-        <el-table-column align="center" label="业务丰富度">
-          <el-table-column align="center" prop="subject_list" :label="[1,2].includes(this.redarParams.type)?'开课学科分布':'教材学科分布'" />
-          <el-table-column align="center" prop="grade_list" :label="[1,2].includes(this.redarParams.type)?'开课年级分布':'教材年级分布'" />
-        </el-table-column>
-        <el-table-column align="center" label="亲密度">
+        <el-table-column
+          v-if="redarParams.type !== 4"
+          align="center"
+          label="效率"
+        >
           <el-table-column
-            v-if="[1,4].includes(this.redarParams.type)"
+            align="center"
+            prop="full_class_rate"
+            label="满班率(%)"
+          />
+          <el-table-column
+            align="center"
+            prop="classroom_rate"
+            label="教室效率"
+          />
+        </el-table-column>
+        <el-table-column
+          align="center"
+          label="业务丰富度"
+        >
+          <el-table-column
+            align="center"
+            prop="subject_list"
+            :label="[1,2].includes(redarParams.type)?'开课学科分布':'教材学科分布'"
+          />
+          <el-table-column
+            align="center"
+            prop="grade_list"
+            :label="[1,2].includes(redarParams.type)?'开课年级分布':'教材年级分布'"
+          />
+        </el-table-column>
+        <el-table-column
+          align="center"
+          label="亲密度"
+        >
+          <el-table-column
+            v-if="[1,4].includes(redarParams.type)"
             align="center"
             prop="contract_date"
             label="签约时间"
           />
           <el-table-column
-            v-if="[2].includes(this.redarParams.type)"
+            v-if="[2].includes(redarParams.type)"
             align="center"
             prop="contract_date"
             label="首次上课时间"
           />
           <el-table-column
-            v-if="this.redarParams.type === 1"
+            v-if="redarParams.type === 1"
             align="center"
             prop="contract_classrooms"
             label="累计签约教室"
           />
           <el-table-column
-            v-if="this.redarParams.type === 2"
+            v-if="redarParams.type === 2"
             align="center"
             prop="class_classrooms"
             label="上课教室数"
           />
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column
+          align="center"
+          label="操作"
+        >
           <template slot-scope="scope">
             <router-link
               :to="{path: '/school_options/radar_detail', query: {schoolId: scope.row.school_id}}"
             >
-              <el-button size="mini">详情</el-button>
+              <el-button size="mini">
+                详情
+              </el-button>
             </router-link>
           </template>
         </el-table-column>
@@ -210,16 +269,17 @@ export default class extends Vue {
       ok,
       message
     } = resData
-    if (!ok)
+    if (!ok) {
       return this.$message({
         type: 'error',
         message: message || '网络错误'
       })
+    }
     this.tableData = data
     this.totalPage = total
     this.date = date
     this.$nextTick(() => {
-      ;(this.$refs.table as any).bodyWrapper.scrollTop = 0
+      (this.$refs.table as any).bodyWrapper.scrollTop = 0
     })
   }
 
@@ -239,11 +299,12 @@ export default class extends Vue {
       type: configMap[type]
     })
     const { data, ok, message } = resData
-    if (!ok)
+    if (!ok) {
       return this.$message({
         type: 'error',
         message: message || '网络错误'
       })
+    }
     this.value1 = JSON.stringify({
       term: data[0].term,
       year: data[0].year,

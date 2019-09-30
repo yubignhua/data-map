@@ -95,104 +95,227 @@
       </div>
     </div>
     <!-- 双师业务 -->
-    <div v-if="live_business.length" class="base_Info_box">
+    <div
+      v-if="live_business.length"
+      class="base_Info_box"
+    >
       <h3>魔法双师业务</h3>
       <div class="content">
         <TabTable :data-list="live_business">
           <template slot-scope="scope">
-            <el-table :data="scope.row" style="width: 100%">
-              <el-table-column prop="row_name" label="指标名称" />
-              <el-table-column prop="spring" label="春" />
-              <el-table-column prop="summer" label="暑" />
-              <el-table-column prop="autumn" label="秋" />
-              <el-table-column prop="winter" label="寒" />
+            <el-table
+              :data="scope.row"
+              style="width: 100%"
+            >
+              <el-table-column
+                prop="row_name"
+                label="指标名称"
+              />
+              <el-table-column
+                prop="spring"
+                label="春"
+              />
+              <el-table-column
+                prop="summer"
+                label="暑"
+              />
+              <el-table-column
+                prop="autumn"
+                label="秋"
+              />
+              <el-table-column
+                prop="winter"
+                label="寒"
+              />
             </el-table>
           </template>
         </TabTable>
       </div>
     </div>
     <!-- 双师学生人次-->
-    <div v-if="live_student.length" class="base_Info_box">
+    <div
+      v-if="live_student.length"
+      class="base_Info_box"
+    >
       <h3>魔法双师学生人次</h3>
       <div class="content">
         <TabTable :data-list="live_student">
           <template slot-scope="scope">
-            <el-table :data="scope.row" style="width: 100%">
+            <el-table
+              :data="scope.row"
+              style="width: 100%"
+            >
               <!-- <el-table-column prop="row_name" label="指标名称" /> -->
-              <el-table-column prop="subject" label="学科" />
-              <el-table-column prop="grade" label="年级" />
-              <el-table-column prop="spring" label="春" />
-              <el-table-column prop="summer" label="暑" />
-              <el-table-column prop="autumn" label="秋" />
-              <el-table-column prop="winter" label="寒" />
+              <el-table-column
+                prop="subject"
+                label="学科"
+              />
+              <el-table-column
+                prop="grade"
+                label="年级"
+              />
+              <el-table-column
+                prop="spring"
+                label="春"
+              />
+              <el-table-column
+                prop="summer"
+                label="暑"
+              />
+              <el-table-column
+                prop="autumn"
+                label="秋"
+              />
+              <el-table-column
+                prop="winter"
+                label="寒"
+              />
             </el-table>
           </template>
         </TabTable>
       </div>
     </div>
     <!-- 双师续报率-->
-    <div v-if="live_go_on.length" class="base_Info_box">
+    <div
+      v-if="live_go_on.length"
+      class="base_Info_box"
+    >
       <h3>魔法双师续报率</h3>
       <div class="content">
         <TabTable :data-list="live_go_on">
           <template slot-scope="scope">
-            <el-table :data="scope.row" style="width: 100%">
-              <el-table-column prop="subject" label="学科/续报期" />
-              <el-table-column prop="spring" label="春续暑" />
-              <el-table-column prop="summer" label="暑续秋" />
-              <el-table-column prop="autumn" label="秋续寒" />
-              <el-table-column prop="winter" label="寒续春" />
+            <el-table
+              :data="scope.row"
+              style="width: 100%"
+            >
+              <el-table-column
+                prop="subject"
+                label="学科/续报期"
+              />
+              <el-table-column
+                prop="spring"
+                label="春续暑"
+              />
+              <el-table-column
+                prop="summer"
+                label="暑续秋"
+              />
+              <el-table-column
+                prop="autumn"
+                label="秋续寒"
+              />
+              <el-table-column
+                prop="winter"
+                label="寒续春"
+              />
             </el-table>
           </template>
         </TabTable>
       </div>
     </div>
     <!-- Ai业务 -->
-    <div v-if="ai_business.length" class="base_Info_box">
+    <div
+      v-if="ai_business.length"
+      class="base_Info_box"
+    >
       <h3>魔法AI业务</h3>
       <div class="content">
         <TabTable :data-list="ai_business">
           <template slot-scope="scope">
-            <el-table :data="scope.row" style="width: 100%">
-              <el-table-column prop="row_name" label="指标名称" />
-              <el-table-column prop="spring" label="春" />
-              <el-table-column prop="summer" label="暑" />
-              <el-table-column prop="autumn" label="秋" />
-              <el-table-column prop="winter" label="寒" />
+            <el-table
+              :data="scope.row"
+              style="width: 100%"
+            >
+              <el-table-column
+                prop="row_name"
+                label="指标名称"
+              />
+              <el-table-column
+                prop="spring"
+                label="春"
+              />
+              <el-table-column
+                prop="summer"
+                label="暑"
+              />
+              <el-table-column
+                prop="autumn"
+                label="秋"
+              />
+              <el-table-column
+                prop="winter"
+                label="寒"
+              />
             </el-table>
           </template>
         </TabTable>
       </div>
     </div>
     <!-- 教材消耗 -->
-    <div v-if="book_consume.length" class="base_Info_box">
+    <div
+      v-if="book_consume.length"
+      class="base_Info_box"
+    >
       <h3>教材消耗</h3>
       <div class="content">
         <TabTable :data-list="book_consume">
           <template slot-scope="scope">
-            <el-table :data="scope.row" style="width: 100%">
+            <el-table
+              :data="scope.row"
+              style="width: 100%"
+            >
               <!-- <el-table-column prop="row_name" label="指标名称" /> -->
-              <el-table-column prop="spring" label="春" />
-              <el-table-column prop="summer" label="暑" />
-              <el-table-column prop="autumn" label="秋" />
-              <el-table-column prop="winter" label="寒" />
-              <el-table-column prop="total_consume" label="累计" />
+              <el-table-column
+                prop="spring"
+                label="春"
+              />
+              <el-table-column
+                prop="summer"
+                label="暑"
+              />
+              <el-table-column
+                prop="autumn"
+                label="秋"
+              />
+              <el-table-column
+                prop="winter"
+                label="寒"
+              />
+              <el-table-column
+                prop="total_consume"
+                label="累计"
+              />
             </el-table>
           </template>
         </TabTable>
       </div>
     </div>
     <!-- 课程包消耗 -->
-    <div v-if="bag_consume.length" class="base_Info_box">
+    <div
+      v-if="bag_consume.length"
+      class="base_Info_box"
+    >
       <h3>课程包消耗</h3>
       <div class="content">
         <TabTable :data-list="bag_consume">
           <template slot-scope="scope">
-            <el-table :data="scope.row" style="width: 100%">
+            <el-table
+              :data="scope.row"
+              style="width: 100%"
+            >
               <!-- <el-table-column prop="row_name" label="指标名称" /> -->
-              <el-table-column prop="subjects" label="学科" />
-              <el-table-column prop="grades" label="年级" />
-              <el-table-column prop="total" label="总计" />
+              <el-table-column
+                prop="subjects"
+                label="学科"
+              />
+              <el-table-column
+                prop="grades"
+                label="年级"
+              />
+              <el-table-column
+                prop="total"
+                label="总计"
+              />
             </el-table>
           </template>
         </TabTable>
@@ -252,11 +375,12 @@ export default class extends Vue {
         date
       }
     } = resData
-    if (!ok)
+    if (!ok) {
       return this.$message({
         message: '网络请求失败' || message,
         type: 'error'
       })
+    }
     this.loading.close()
     this.school_info = school_info
     this.ai_business = ai_business

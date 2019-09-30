@@ -5,29 +5,50 @@
       'menu-wrapper',
       isCollapse ? 'simple-mode' : 'full-mode',
       {'first-level': isFirstLevel}
-    ]">
+    ]"
+  >
     <!-- 当只有一个子元素 -->
     <template v-if="theOnlyOneChild && !theOnlyOneChild.children">
-      <sidebar-item-link v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
+      <sidebar-item-link
+        v-if="theOnlyOneChild.meta"
+        :to="resolvePath(theOnlyOneChild.path)"
+      >
         <el-menu-item
           :index="resolvePath(theOnlyOneChild.path)"
-          :class="{'submenu-title-noDropdown': isFirstLevel}">
-          <svg-icon v-if="theOnlyOneChild.meta.icon" :name="theOnlyOneChild.meta.icon" />
-          <span v-if="theOnlyOneChild.meta.title" slot="title">
+          :class="{'submenu-title-noDropdown': isFirstLevel}"
+        >
+          <svg-icon
+            v-if="theOnlyOneChild.meta.icon"
+            :name="theOnlyOneChild.meta.icon"
+          />
+          <span
+            v-if="theOnlyOneChild.meta.title"
+            slot="title"
+          >
             {{
-            theOnlyOneChild.meta.title
+              theOnlyOneChild.meta.title
             }}
           </span>
         </el-menu-item>
       </sidebar-item-link>
     </template>
     <!-- 有多个子元素 -->
-    <el-submenu v-else :index="resolvePath(item.path)" popper-append-to-body>
+    <el-submenu
+      v-else
+      :index="resolvePath(item.path)"
+      popper-append-to-body
+    >
       <template slot="title">
-        <svg-icon v-if="item.meta && item.meta.icon" :name="item.meta.icon" />
-        <span v-if="item.meta && item.meta.title" slot="title">
+        <svg-icon
+          v-if="item.meta && item.meta.icon"
+          :name="item.meta.icon"
+        />
+        <span
+          v-if="item.meta && item.meta.title"
+          slot="title"
+        >
           {{
-          item.meta.title
+            item.meta.title
           }}
         </span>
       </template>

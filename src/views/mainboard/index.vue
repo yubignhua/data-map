@@ -1,18 +1,36 @@
 <template>
   <div class="app-container">
-    <h1 class="main_board_title">未来魔法校商业智能平台</h1>
+    <h1 class="main_board_title">
+      未来魔法校商业智能平台
+    </h1>
     <div class="main_board_content">
-      <section v-for="(item,index) in dataList" :key="index" class="section">
+      <section
+        v-for="(item,index) in dataList"
+        :key="index"
+        class="section"
+      >
         <h3>{{ item.name }}</h3>
         <div class="card_box">
-          <div class="mcard_box" v-for="(mItem,index) in item.items" :key="index" @click="onChangeTo(mItem)" >
+          <div
+            v-for="(mItem,index) in item.items"
+            :key="index"
+            class="mcard_box"
+            @click="onChangeTo(mItem)"
+          >
             <el-card class="box-card">
               <div>
                 <div class="title">
-                  <svg-icon name="班课详情" color="#00b992" width="20" height="20" />
+                  <svg-icon
+                    name="班课详情"
+                    color="#00b992"
+                    width="20"
+                    height="20"
+                  />
                   {{ mItem.title }}
                 </div>
-                <div class="content">{{ mItem.des }}</div>
+                <div class="content">
+                  {{ mItem.des }}
+                </div>
               </div>
             </el-card>
           </div>
@@ -71,7 +89,7 @@ export default class extends Vue {
    */
   private handleRouterConf(type: string): void {
     const conf: any = {
-      bi: '/overallOptration/operationCockpit', //业务驾驶舱
+      bi: '/overallOptration/operationCockpit', // 业务驾驶舱
       radar: '/school_options/school_radar', // 机构雷达
       school_rank: '/school_options/dts_rank', // 机构排名
       live_business: '/businessDataSection/iframePage', // title: "双师业务数据"
@@ -87,14 +105,13 @@ export default class extends Vue {
     this.$router.push({ path: conf[type] })
   }
 
-  private createAuthMap(arr:any[]){
+  private createAuthMap(arr:any[]) {
     let authMap:any = {}
-    for( let item of arr){
-      for (let i of item.items){
+    for (let item of arr) {
+      for (let i of item.items) {
         console.log(i)
         authMap[i.type] = i.is_allow
       }
-
     }
     return authMap
   }
@@ -117,7 +134,7 @@ export default class extends Vue {
     }
     this.loading.close()
     this.dataList = data
-    console.log('data: ', data);
+    console.log('data: ', data)
   }
 }
 </script>

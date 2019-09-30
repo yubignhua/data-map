@@ -5,8 +5,8 @@
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive" />
     <div id="link_us">
-      <div><i class="el-icon-s-check"></i></div>
-      </div>
+      <div><i class="el-icon-s-check" /></div>
+    </div>
   </div>
 </template>
 

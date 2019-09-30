@@ -10,19 +10,30 @@
       <div>
         <!-- <div>请钉钉联系:</div> -->
         <div class="s_header_box">
-          <img class="avatar" src="https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/img/Snipaste_2019-09-27_18-14-32.png" alt="">
-                    <div style="font-size:16px">曹逾</div>
-
+          <img
+            class="avatar"
+            src="https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/img/Snipaste_2019-09-27_18-14-32.png"
+            alt=""
+          >
+          <div style="font-size:16px">
+            曹逾
+          </div>
         </div>
         <div class="s_qr_code">
           <img
             src="https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/img/Snipaste_2019-09-27_18-14-10.png"
             alt
-          />
+          >
         </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="centerDialogVisible = false"
+        >确 定</el-button>
       </span>
     </el-dialog>
     <hamburger
@@ -31,21 +42,34 @@
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb
+      id="breadcrumb-container"
+      class="breadcrumb-container"
+    />
     <div class="right-menu">
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+      >
         <span class="el-dropdown-link">
           {{ userName }}
           <i class="el-icon-caret-bottom" />
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <span style="display:block;" @click="logout">退出登录</span>
+            <span
+              style="display:block;"
+              @click="logout"
+            >退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-button type="primary" @click="centerDialogVisible = true" class="help_me">
+    <el-button
+      type="primary"
+      class="help_me"
+      @click="centerDialogVisible = true"
+    >
       <i class="el-icon-s-custom" /> 需要帮助?
     </el-button>
   </div>
