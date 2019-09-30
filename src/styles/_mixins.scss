@@ -1,0 +1,415 @@
+
+
+@import "_variables";
+@import "_transition";
+// rem 基准 iphone6
+$screen-width: 37.5;
+@function rem($px) {
+  @return $px / $screen-width * 1rem;
+}
+/* 
+  *这个属性只用于iOS (iPhone和iPad)。当你点击一个链接或者通过Javascript定义的可点击元素的时候，
+  *它就会出现一个半透明的灰色背景
+ */
+@mixin appearance {
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+@mixin scrollBar {
+  &::-webkit-scrollbar-track-piece {
+    background: #d3dce6;
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #99a9bf;
+    border-radius: 20px;
+  }
+}
+
+@mixin relative {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin marauto($pct) {
+  width: #{$pct};
+  position: relative;
+  margin: 0 auto;
+}
+
+// @include triangle(50px,30px,$deep-blue,'left')
+@mixin triangle($width, $height, $color, $direction) {
+  $width: $width/2;
+  $color-border-style: $height solid $color;
+  $transparent-border-style: $width solid transparent;
+  height: 0;
+  width: 0;
+  @if $direction==up {
+    border-bottom: $color-border-style;
+    border-left: $transparent-border-style;
+    border-right: $transparent-border-style;
+  } @else if $direction==right {
+    border-left: $color-border-style;
+    border-top: $transparent-border-style;
+    border-bottom: $transparent-border-style;
+  } @else if $direction==down {
+    border-top: $color-border-style;
+    border-left: $transparent-border-style;
+    border-right: $transparent-border-style;
+  } @else if $direction==left {
+    border-right: $color-border-style;
+    border-top: $transparent-border-style;
+    border-bottom: $transparent-border-style;
+  }
+}
+
+// right:45  down :135  up -45  left: -135
+@mixin arrow($direction) {
+  display: inline-block;
+  height: 1px;
+  width: 10px;
+  position: relative;
+  &::after {
+    content: "";
+    border: 2px solid #c8c8cd;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    content: " ";
+    top: 50%;
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    @if $direction == right {
+      -webkit-transform: translateY(-50%) rotate(45deg);
+      transform: translateY(-50%) rotate(45deg);
+    } @else if $direction == up {
+      -webkit-transform: translateY(-50%) rotate(-45deg);
+      transform: translateY(-50%) rotate(-45deg);
+    } @else if $direction ==down {
+      -webkit-transform: translateY(-50%) rotate(135deg);
+      transform: translateY(-50%) rotate(135deg);
+    } @else if $direction == left {
+      -webkit-transform: translateY(-50%) rotate(135deg);
+      transform: translateY(-50%) rotate(-135deg);
+    }
+  }
+}
+
+// 蒙版
+@mixin mask {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+// 背景图片地址和大小
+@mixin bg-img($url) {
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+//定位全屏
+@mixin cover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+//定位上下左右居中
+@mixin center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+//定位上下居中
+@mixin ct {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+//定位左右居中
+@mixin cl {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+//宽高
+@mixin wh($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+//字体大小、行高、字体
+@mixin font($size, $line-height, $family: "Microsoft YaHei") {
+  font: #{$size}/#{$line-height} $family;
+}
+
+//字体大小，颜色
+@mixin sc($size, $color) {
+  font-size: $size;
+  color: $color;
+}
+
+//flex 布局和 子元素 对其方式
+@mixin fj($type: space-between) {
+  display: flex;
+  justify-content: $type;
+}
+// ...省略
+@mixin ell() {
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 超过几行就有省略号
+@mixin line-clamp($line) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+}
+
+// input样式
+@mixin input {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: rem(14);
+  box-sizing: border-box;
+  outline: none;
+  border: 1px solid rgba(245, 246, 249, 1);
+  border-radius: 6px;
+  padding: 14px 20px;
+  box-sizing: border-box;
+  @include appearance;
+  ::-webkit-input-placeholder {
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    // color: rgba(192, 201, 209, 1);
+    color: red;
+    position: relative;
+    border: none;
+  }
+}
+@mixin select {
+  height: 48px;
+  padding: 14px 20px;
+  .cube-select-placeholder {
+    color: rgba(192, 201, 209, 1);
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
+  }
+  .cube-select::after {
+    border: 1px solid rgb(63, 84, 148);
+    border-radius: 6px;
+  }
+}
+// textarea
+@mixin textarea {
+  border-radius: rem(2);
+  width: 100%;
+  border: 1px solid $light-blue;
+  padding: rem(10);
+  font-size: rem(13);
+  color: #666;
+  border-radius: rem(2);
+  box-sizing: border-box;
+  @include appearance;
+}
+
+// button
+@mixin button {
+  width: 100px;
+  font-size: rem(16);
+  padding: rem(12) 0;
+  color: $white;
+  background-color: $light-blue;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  outline: none;
+  border: 0 none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  &.disabled {
+    background-color: #cecece;
+  }
+  & :active{
+    background-color: rgba(0, 0, 0, 0.15);
+
+  }
+}
+
+@mixin checkbox {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  vertical-align: middle;
+  .checkbox-core {
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 100%;
+    border: 1px solid #ccc;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    &::after {
+      border: 2px solid transparent;
+      border-left: 0;
+      border-top: 0;
+      content: " ";
+      top: 3px;
+      left: 6px;
+      position: absolute;
+      width: 4px;
+      height: 8px;
+      -webkit-transform: rotate(45deg) scale(0);
+      transform: rotate(45deg) scale(0);
+      -webkit-transition: -webkit-transform 0.2s;
+      transition: -webkit-transform 0.2s;
+      transition: transform 0.2s;
+      transition: transform 0.2s, -webkit-transform 0.2s;
+    }
+  }
+  .checkbox-input {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    &:checked + .checkbox-core {
+      background-color: $blue;
+      border-color: $blue;
+      &::after {
+        border-color: #fff;
+        -webkit-transform: rotate(45deg) scale(1);
+        transform: rotate(45deg) scale(1);
+      }
+    }
+  }
+}
+
+@mixin icon {
+  font-family: "mintui" !important;
+  font-size: 56px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+  &.icon-success::before {
+    content: "\E604";
+  }
+  &.icon-more:before {
+    content: "\E601";
+  }
+  &.icon-back:before {
+    content: "\E600";
+  }
+  &.icon-field-error:before {
+    content: "\E605";
+  }
+  &.icon-field-warning:before {
+    content: "\E608";
+  }
+  &.icon-success:before {
+    content: "\E602";
+  }
+  &.icon-field-success:before {
+    content: "\E609";
+  }
+}
+
+@mixin associate-tip {
+  padding: rem(13) rem(15);
+  color: #999;
+  border-top: 1px solid #e7e7e7;
+  border-bottom: 1px solid #e7e7e7;
+  overflow: hidden;
+  b {
+    color: #1c91e0;
+  }
+  .close {
+    float: right;
+  }
+}
+
+@mixin radio-line {
+  color: #666;
+  font-size: rem(14);
+  padding: rem(6) 0;
+  cursor: pointer;
+  .radio-circle {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+    margin-right: rem(10);
+    border: 1px solid $blue;
+    border-radius: 50%;
+    vertical-align: middle;
+    &.cur:after {
+      position: absolute;
+      display: inline-block;
+      content: "";
+      width: 10px;
+      height: 10px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background-color: #1b91e0;
+    }
+  }
+  .radio-msg {
+    vertical-align: middle;
+    color: #666;
+    font-size: rem(14);
+  }
+}
+
+// 去除浮动
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+
+
+/* Mixins */
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}

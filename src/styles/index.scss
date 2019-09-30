@@ -1,0 +1,104 @@
+// @import './variables.scss'; // Already imported in style-resources-loader
+// @import './mixins.scss'; // Already imported in style-resources-loader
+@import './transition.scss';
+@import './svgicon.scss';
+
+/* Global scss */
+
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+html {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+li,
+dl,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+a,
+a:focus,
+a:hover {
+  color: inherit;
+  outline: none;
+  text-decoration: none;
+}
+
+div:focus {
+  outline: none;
+}
+
+// 自定义 css class 
+.clearfix {
+  @include clearfix;
+}
+
+.app-container {
+  padding: 20px;
+}
+
+.wrap-bg {
+  background-color: #fff;
+}
+
+.app-row {
+  display: flex;
+  margin-bottom: 20px;
+
+  &.v-center {
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.head-title {
+  color: $headTextColor;
+}
+
+.sub-title {
+  font-size: 14px;
+  color: $subTitleColor;
+}
+
+// 修改element 全局公共样式
+
+.el-pagination .btn-prev, .el-pagination .btn-next {
+  background-color: transparent;
+}
+
+.el-pagination button:disabled {
+  background-color: transparent;
+}
+
+.el-pager li {
+  background-color: transparent;
+}
