@@ -1,41 +1,20 @@
 <template>
-  <div class="app-container">
-    <h1 class="main_board_title">
-      未来魔法校商业智能平台
-    </h1>
-    <div class="main_board_content">
-      <section
-        v-for="(item,index) in dataList"
-        :key="index"
-        class="section"
-      >
-        <h3>{{ item.name }}</h3>
-        <div class="card_box">
-          <div
-            v-for="(mItem,index) in item.items"
-            :key="index"
-            class="mcard_box"
-            @click="onChangeTo(mItem)"
-          >
-            <el-card class="box-card">
-              <div>
-                <div class="title">
-                  <svg-icon
-                    name="班课详情"
-                    color="#00b992"
-                    width="20"
-                    height="20"
-                  />
-                  {{ mItem.title }}
-                </div>
-                <div class="content">
-                  {{ mItem.des }}
-                </div>
-              </div>
-            </el-card>
-          </div>
-        </div>
-      </section>
+  <div class="main-map-container">
+    <div class="app-container">
+      <div id="container"></div>
+      <div class="input-card">
+        <input
+          id="removeAllOverlay"
+          type="button"
+          @click="removeAllOverlay"
+          class="btn"
+          value="清除所有覆盖物"
+        />
+      </div>
+      <div class="main_bottom">234</div>
+    </div>
+    <div class="app_right_bar">
+      <div class="app_right_title">用户列表</div>
     </div>
   </div>
 </template>
@@ -43,7 +22,7 @@
 <script lang="ts">
 import { getIndexData } from '@/services/dtsRank/index'
 import { Component, Vue } from 'vue-property-decorator'
-
+import R from '@/utils/freePiont'
 interface taskListState {
   count: number
   key: string
@@ -54,123 +33,236 @@ interface taskListState {
   name: 'home'
 })
 export default class extends Vue {
-  private dataList: any[] = []
-  private loading: any
-  created() {
-    // this.$elementMessage('234234')
-    this.loading = this.$loading({
-      lock: true,
-      text: 'Loading',
-      spinner: 'el-icon-loading'
+  // 地图对象实例
+  private map: any
+  // 默认中心点坐标
+  private center: any[] = [119.428, 36]
+  // //设置地图显示的缩放级别
+  private zoom = 11
+
+  // 轨迹坐标
+  private testTrack = [
+    ['119.368904', '35.913423'],
+    ['119.382122', '35.901176'],
+    ['119.387271', '35.912501'],
+    ['119.398258', '35.904600']
+  ]
+  private testMarkerData = [
+    {
+      lnglat: [116.405285, 39.904989], //点标记位置
+      name: 'beijing',
+      id: 1
+    },
+    {
+      lnglat: [116.505285, 38.904989], //点标记位置
+      name: 'beijing',
+      id: 2
+    },
+    {
+      lnglat: [116.605285, 37.904989], //点标记位置
+      name: 'beijing',
+      id: 3
+    },
+    {
+      lnglat: [116.705285, 36.904989], //点标记位置
+      name: 'beijing',
+      id: 4
+    },
+    {
+      lnglat: [116.805285, 35.904989], //点标记位置
+      name: 'beijing',
+      id: 5
+    },
+  ]
+
+  mounted() {
+    this.map = this.initAMap()
+    this.map.on('complete', () => {
+      // 地图图块加载完成后触发
+      console.log('地图加载完成')
     })
-    this.requestIndexData()
+    this.addPolyLine(this.testTrack)
+    this.drawMarker(this.testMarkerData)
   }
 
   /**
-   * @message: 跳转权限页面
+   * @message: 请求当前轨迹坐标
    * @parameter:
    * @Return:
-   * @Date: 2019-09-23 14:23:41
+   * @Date: 2019-09-30 18:58:06
    */
-  private onChangeTo(mItem: any) {
-    console.log(mItem.type)
-    if (mItem.is_allow) {
-      this.handleRouterConf(mItem.type)
-    } else {
-      this.$router.push({ path: '/mainboard/401' })
-    }
+  private async requestCurTracks(id: number) {
+    const resData = await getTracksData(id)
+    const { ok, dataList, message } = resData
+    if (!ok) return this.$elementMessage(message || '轨迹信息获取失败')
+    this.removeAllOverlay()
+    this.addPolyLine(dataList)
   }
 
   /**
-   * @message: 处理路由配置
+   * @message: 请求设备坐标点
    * @parameter:
    * @Return:
-   * @Date: 2019-09-24 17:52:57
+   * @Date: 2019-09-30 18:58:06
    */
-  private handleRouterConf(type: string): void {
-    const conf: any = {
-      bi: '/overallOptration/operationCockpit', // 业务驾驶舱
-      radar: '/school_options/school_radar', // 机构雷达
-      school_rank: '/school_options/dts_rank', // 机构排名
-      live_business: '/businessDataSection/iframePage', // title: "双师业务数据"
-      ai_business: '/businessDataSection/iframePage1', // title: "AI业务数据"
-      content_business: '/businessDataSection/iframePage6', // title: "内容业务数据"
-      train_business: '/businessDataSection/iframePage4', // title: "师训业务数据"
-      finance_data: '/financeData/financeData_detal', // title: "财务数据"
-      teaching_product: '/teachingData/teaching_prod_data', // title: "产品数据"
-      teaching_business: '/teachingData/teaching_option_data', // title: "业务数据"
-      lwj_business: '/foreign_teacher/foreign_teacher-data' // title: "乐外教数据"
-    }
-    if (!conf[type]) return
-    this.$router.push({ path: conf[type] })
+  private async requestMarkerData() {
+    const resData = await getMarkerData()
+    const { ok, dataList, message } = resData
+    if (!ok) return this.$elementMessage(message || '轨迹信息获取失败')
+    const massMarks = this.createMarkerStyObj()
+    this.drawMarker(dataList)
   }
 
-  private createAuthMap(arr:any[]) {
-    let authMap:any = {}
-    for (let item of arr) {
-      for (let i of item.items) {
-        console.log(i)
-        authMap[i.type] = i.is_allow
+  /**
+   * @message: 绘制坐地点
+   * @parameter: 
+   * @Return: 
+   * @Date: 2019-09-30 19:26:08
+   */
+  private drawMarker(data:any[]){
+    const massMarks = this.createMarkerStyObj()
+    massMarks.setData(data);
+    // 将海量点添加至地图实例
+    massMarks.setMap(this.map);
+  }
+  
+  /**
+   * @message: 增加轨迹
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-30 17:26:22
+   */
+  private addPolyLine(testTrack: any[]) {
+    const fn = R.pipe(
+      this.hanleTrakData,
+      this.createPolyLine
+    )
+    const polyline = fn(testTrack)
+    this.map.add(polyline)
+    this.map.setFitView([polyline])
+  }
+
+  /**
+   * @message: 清除地图上所有添加的覆盖物
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-30 18:55:43
+   */
+  private removeAllOverlay(): void {
+    this.map.clearMap()
+  }
+
+  /**
+   * @message: 初始化地图
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-30 16:49:23
+   */
+  private initAMap() {
+    const map = new AMap.Map('container', {
+      zoom: this.zoom,
+      center: this.center
+    })
+    AMap.plugin(
+      ['AMap.ToolBar', 'AMap.Scale', 'AMap.Geolocation', 'AMap.MapType'],
+      () => {
+        //异步同时加载多个插件
+        const toolbar = new AMap.ToolBar()
+        const scale = new AMap.Scale()
+        const geolocation = new AMap.Geolocation()
+        const mapType = new AMap.MapType()
+        map.addControl(toolbar)
+        map.addControl(scale)
+        map.addControl(geolocation)
+        map.addControl(mapType)
       }
-    }
-    return authMap
+    )
+    return map
   }
 
   /**
-   * @message: 获取信息
+   * @message: 创建 marker坐标 对象
+   * @parameter: 
+   * @Return: 
+   * @Date: 2019-09-30 19:22:21
+   */
+  private createMarkerStyObj() {
+    // 创建样式对象
+    const styleObject = new AMap.StyleObject({
+      url: '//vdata.amap.com/icons/b18/1/2.png', // 图标地址
+      size: new AMap.Size(11, 11), // 图标大小
+      anchor: new AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
+    })
+    return new AMap.MassMarks({
+      zIndex: 5, // 海量点图层叠加的顺序
+      zooms: [3, 19], // 在指定地图缩放级别范围内展示海量点图层
+      style: styleObject // 设置样式对象
+    })
+  }
+
+  /**
+   * @message: 获取轨迹装换数据
    * @parameter:
    * @Return:
-   * @Date: 2019-09-17 10:30:31
+   * @Date: 2019-09-30 17:12:20
    */
-  private async requestIndexData() {
-    const resData = await getIndexData<IResponseData>()
-    const { ok, data, message } = resData
-    if (!ok) {
-      this.loading.close()
-      return this.$message({
-        type: 'error',
-        message: message || '网络错误获取失败'
-      })
-    }
-    this.loading.close()
-    this.dataList = data
-    console.log('data: ', data)
+  private hanleTrakData(arr: any[]) {
+    const newArr = arr.map(item => {
+      return new AMap.LngLat(...item)
+    })
+    return newArr
+  }
+
+  /**
+   * @message: 绘制轨迹
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-30 17:08:11
+   */
+  private createPolyLine(path: any[]) {
+    var polyline = new AMap.Polyline({
+      path: path,
+      borderWeight: 2, // 线条宽度，默认为 1
+      strokeColor: 'red', // 线条颜色
+      lineJoin: 'round' // 折线拐点连接处样式
+    })
+    return polyline
+  }
+
+  // 删除 maker
+  removeMarker(marker: any) {
+    this.map.remove(marker)
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.app-container {
+.main-map-container {
   min-height: 100%;
   background-color: #ffffff;
-  .main_board_content {
-    .section {
-      margin-top: 30px;
-      .mcard_box{
-         cursor: pointer;
-      }
-      .card_box {
-        margin-top: 10px;
-        display: flex;
-        .el-card {
-          width: 200px;
-          height: 100px;
-          margin: 10px;
-          border-radius: 12px;
-          .svg-icon {
-            position: relative;
-            top: 2px;
-            border-radius: 50%;
-            margin-right: 5px;
-          }
-          .content {
-            margin-left: 25px;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #999;
-          }
-        }
-      }
+  display: flex;
+  .app-container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    #container {
+      width: 100%;
+      flex: 1;
+    }
+    .main_bottom {
+      min-height: 100px;
+      background: #2e4155;
+      border-radius: 8px;
+      color: white;
+    }
+  }
+  .app_right_bar {
+    width: 200px;
+    background: #2e4155;
+    .app_right_title {
+      padding: 20px;
+      color: white;
     }
   }
 }

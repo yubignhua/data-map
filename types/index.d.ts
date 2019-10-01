@@ -2,6 +2,7 @@ interface Window {
   LOCAL_CONFIG?: any;
   tinymce?: any;
   webkitURL?: any;
+  AMap:any
 }
 
 declare var window: Window

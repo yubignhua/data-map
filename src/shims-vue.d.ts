@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-22 15:26:13
- * @LastEditTime: 2019-09-20 16:58:16
+ * @LastEditTime: 2019-09-30 16:05:53
  * @LastEditors: Please set LastEditors
  */
 declare module '*.vue' {
@@ -24,3 +24,10 @@ declare interface IResponseData<T = any> {
   message?: string;
   meta?: object
 }
+
+interface IAmap {
+  new (): any;
+  [key: string]: any
+}
+
+declare var AMap: IAmap
