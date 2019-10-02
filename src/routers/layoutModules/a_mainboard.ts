@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-30 11:37:29
+ * @LastEditTime: 2019-10-02 21:48:19
+ * @LastEditors: Please set LastEditors
+ */
 import Layout from '@/layout/index.vue'
 export default [
 
@@ -6,7 +13,7 @@ export default [
     component: Layout,
     redirect: '/mainboard/mainboard',
     meta: {
-      title: '首页',
+      title: '救援地图',
       icon: 'dashboard'
     },
     children: [
@@ -14,7 +21,7 @@ export default [
         path: 'mainboard',
         component: () => import(/* webpackChunkName: "workboard" */ '@/views/mainboard/index.vue'),
         meta: {
-          title: '首页',
+          title: '救援地图',
           icon: 'dashboard',
           keepAlive: true
         }

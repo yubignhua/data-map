@@ -1,41 +1,5 @@
 <template>
   <div class="navbar">
-    <el-dialog
-      title="请钉钉联系"
-      :append-to-body="true"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-    >
-      <div>
-        <!-- <div>请钉钉联系:</div> -->
-        <div class="s_header_box">
-          <img
-            class="avatar"
-            src="https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/img/Snipaste_2019-09-27_18-14-32.png"
-            alt=""
-          >
-          <div style="font-size:16px">
-            曹逾
-          </div>
-        </div>
-        <div class="s_qr_code">
-          <img
-            src="https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/img/Snipaste_2019-09-27_18-14-10.png"
-            alt
-          >
-        </div>
-      </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          type="primary"
-          @click="centerDialogVisible = false"
-        >确 定</el-button>
-      </span>
-    </el-dialog>
     <hamburger
       id="hamburger-container"
       :is-active="sidebar.opened"
@@ -65,13 +29,6 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-button
-      type="primary"
-      class="help_me"
-      @click="centerDialogVisible = true"
-    >
-      <i class="el-icon-s-custom" /> 需要帮助?
-    </el-button>
   </div>
 </template>
 

@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-08-22 15:26:13
+ * @LastEditTime: 2019-08-22 15:26:13
+ * @LastEditors: your name
+ -->
 <template>
   <div
     class="sidebar-logo-container"
@@ -42,7 +49,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   @Prop({ required: true }) private collapse!: boolean
 
-  private title = '商业智能平台'
+  private title = '智慧救援数据平台'
 }
 </script>
 
