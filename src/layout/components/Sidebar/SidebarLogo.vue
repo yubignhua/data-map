@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-22 15:26:13
- * @LastEditTime: 2019-08-22 15:26:13
- * @LastEditors: your name
+ * @LastEditTime: 2019-10-04 20:33:19
+ * @LastEditors: Please set LastEditors
  -->
 <template>
   <div
@@ -18,7 +18,7 @@
         to="/"
       >
         <img
-          src="../../../assets/images/logo.png"
+          src="../../../assets/images/help_logo.png"
           class="sidebar-logo"
         >
       </router-link>
@@ -29,7 +29,7 @@
         to="/"
       >
         <img
-          src="../../../assets/images/logo.png"
+          src="../../../assets/images/help_logo.png"
           class="sidebar-logo"
         >
         <h1 class="sidebar-title">
@@ -78,7 +78,7 @@ export default class extends Vue {
 
     & .sidebar-logo {
       width: 32px;
-      height: 15px;
+      height: 25px;
       vertical-align: middle;
       margin-right: 10px;
       margin-bottom: 3px;

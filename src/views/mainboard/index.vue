@@ -2,28 +2,21 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-02 21:35:30
+ * @LastEditTime: 2019-10-07 15:22:52
  * @LastEditors: Please set LastEditors
  -->
 <template>
   <div class="main-map-container">
     <div class="app-container">
       <div id="container" />
-      <div class="input-card">
-        <input
-          id="removeAllOverlay"
-          type="button"
-          class="btn"
-          value="清除所有覆盖物"
-          @click="removeAllOverlay"
-        />
-      </div>
       <div class="main_bottom">
         <div class="left">
+          <svg-icon name="icon_sos" width="50" height="50" />
+        </div>
+        <div class="right">
           <div>日客则地区一号救援</div>
           <div>阿里地区二号救援</div>
         </div>
-        <div class="right" />
       </div>
     </div>
     <div class="app_right_bar">
@@ -52,59 +45,27 @@
           </el-select>
         </div>
         <div class="line_state_box section">
-          <el-radio-group v-model="lineState">
-            <el-radio-button label="在线" />
-            <el-radio-button label="离线" />
-            <el-radio-button label="全部" />
+          <el-radio-group @change="onHandleStateChange" v-model="lineState">
+            <el-radio-button label="1">在线</el-radio-button>
+            <el-radio-button label="2">离线</el-radio-button>
+            <el-radio-button label="3">全部</el-radio-button>
           </el-radio-group>
         </div>
         <div class="content_box">
-          <div
-            v-for="(item,index) in [0,0,0,0,0,0,0]"
+          <DeviceInfo
+            @show-cur-polyline="requestCurTracks"
+            @show-polyline="addPolyLine"
+            @show-positin="showMarkerPositin"
+            :data="item"
+            v-for="(item,index) in markers"
             :key="index"
-            class="device_item"
-            @click="showMarkerPositin(item)"
-          >
-            <div class="device_name line_item">设备1 (37078218767)</div>
-            <div class="position_info line_item">北京市海淀区海淀南路苏州街地铁</div>
-            <div class="device_info line_item">( · |电量|信号|更新时间 2019-09-12 09:10:20 )</div>
-            <div class="btn_group_box">
-              <!-- <div class="btn1 btn">实时追踪</div>
-              <div class="btn2 btn">历史轨迹</div>
-              <div class="btn3 btn">设备设置</div>-->
-              <el-button-group>
-                <el-button size="mini">实时追踪</el-button>
-                <el-button size="mini" @click="addPolyLine(testTrack)">历史轨迹</el-button>
-                <el-button size="mini">设备设置</el-button>
-              </el-button-group>
-            </div>
-          </div>
+          ></DeviceInfo>
         </div>
       </div>
-
       <div class="bottom_content_box">
         <div class="wran_title">报警列表</div>
         <div class="warn_box">
-          <div
-            v-for="(item,index) in [0,0,0,0,0,0,0]"
-            :key="index"
-            class="device_item"
-            @click="showMarkerPositin(item)"
-          >
-            <div class="device_name line_item">设备1 (37078218767)</div>
-            <div class="position_info line_item">北京市海淀区海淀南路苏州街地铁</div>
-            <div class="device_info line_item">( · |电量|信号|更新时间 2019-09-12 09:10:20 )</div>
-            <div class="btn_group_box">
-              <!-- <div class="btn1 btn">实时追踪</div>
-              <div class="btn2 btn">历史轨迹</div>
-              <div class="btn3 btn">设备设置</div>-->
-              <el-button-group>
-                <el-button size="mini">实时追踪</el-button>
-                <el-button size="mini">历史轨迹</el-button>
-                <el-button size="mini">设备设置</el-button>
-              </el-button-group>
-            </div>
-          </div>
+          <DeviceInfo :data="item" v-for="(item,index) in markers" :key="index"></DeviceInfo>
         </div>
       </div>
     </div>
@@ -114,19 +75,25 @@
 <script lang="ts">
 import { getIndexData } from '@/services/dtsRank/index'
 import { Component, Vue } from 'vue-property-decorator'
+import { getAllUser } from '@/services/dataMap/index'
 import R from '@/utils/freePiont'
-import { markerList } from './data'
-interface taskListState {
-  count: number
-  key: string
-  name: string
+import { markerList, dataList, massMarkes } from './data'
+import DeviceInfo from './components/deviceInfo.vue'
+interface IMarkerParams {
+  page: number
+  perpage: number
+  group: string
+  state: number
+  keyword: string
+  alarm_type?: number
 }
 
 @Component({
-  name: 'home'
+  name: 'deviceInfo',
+  components: { DeviceInfo }
 })
 export default class extends Vue {
-  private lineState: string = ''
+  private lineState: string = '在线'
   private options: any[] = [
     {
       value: '选项1',
@@ -152,7 +119,14 @@ export default class extends Vue {
     ['119.387271', '35.912501'],
     ['119.398258', '35.904600']
   ]
-  private markers: any[] = markerList
+  private markers: any[] = this.createRealMarkerDate(dataList)
+  private markerParams: IMarkerParams = {
+    page: 1,
+    perpage: 20,
+    group: '',
+    state: 1,
+    keyword: ''
+  }
 
   mounted() {
     this.map = this.initAMap()
@@ -160,8 +134,87 @@ export default class extends Vue {
       // 地图图块加载完成后触发
       console.log('地图加载完成')
     })
-    // this.addPolyLine(this.testTrack)
-    this.drawMarker(this.markers)
+    // this.drawMarker(this.markers)
+    // getAllUser().then(res => {
+    //   console.log(res)
+    // })
+
+    // const style = [
+    //   {
+    //     url: '../../assets/images/help_logo.png',
+    //     anchor: new AMap.Pixel(6, 6),
+    //     size: new AMap.Size(8, 8)
+    //   },
+    //   {
+    //     url: '../../assets/images/help_logo.png',
+    //     anchor: new AMap.Pixel(3, 3),
+    //     size: new AMap.Size(8, 8)
+    //   },
+    //   {
+    //     url: '../../assets/images/help_logo.png',
+    //     anchor: new AMap.Pixel(4, 4),
+    //     size: new AMap.Size(8, 8)
+    //   }
+    // ]
+
+    // var mass = new AMap.MassMarks({
+    //   opacity: 0.8,
+    //   zIndex: 111,
+    //   cursor: 'pointer',
+    //   style: style
+    // })
+
+    // mass.setData(massMarkes);
+
+    // mass.setMap(this.map)
+
+    // var styleObject = new AMap.StyleObject({
+    //   url: '//vdata.amap.com/icons/b18/1/2.png', // 图标地址
+    //   size: new AMap.Size(11, 11), // 图标大小
+    //   anchor: new AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
+    // })
+  }
+
+  /**
+   * @message: 监听搜索按钮
+   * @parameter:
+   * @Return:
+   * @Date: 2019-10-04 22:07:41
+   */
+  private onSearch(): void {
+    this.markerParams.keyword = this.keyword
+    this.requestMarkerData(this.markerParams)
+  }
+
+  /**
+   * @message: 在线状态切换
+   * @parameter:
+   * @Return:
+   * @Date: 2019-10-04 21:52:42
+   */
+  private onHandleStateChange(e: string) {
+    this.markerParams.state = +e
+    this.requestMarkerData(this.markerParams)
+  }
+
+  /**
+   * @message: 生成渲染 markder 列表标记
+   * @parameter:
+   * @Return:
+   * @Date: 2019-10-03 13:50:35
+   */
+  private createRealMarkerDate(dataList: any[]) {
+    return dataList.map((item: any) => {
+      const iconMap: any = {
+        0: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png',
+        1: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
+      }
+      const content = `<div class="custom-content-marker"><img src="${
+        iconMap[item.type]
+      }"></div>`
+      item.content = content
+      return item
+    })
   }
 
   // 关闭信息窗体
@@ -190,7 +243,7 @@ export default class extends Vue {
    * @Date: 2019-10-02 20:59:35
    */
   private createInfoDom(title: string, content: string) {
-    var info = document.createElement('div')
+    const info = document.createElement('div')
     info.className = 'custom-info input-card content-window-card'
     // 可以通过下面的方式修改自定义窗体的宽高
     // info.style.width = "400px";
@@ -230,12 +283,16 @@ export default class extends Vue {
    * @Return:
    * @Date: 2019-10-02 14:35:51
    */
-  showMarkerPositin() {
+  showMarkerPositin(position: any[]) {
+    console.log('position: ', position)
     // this.map.setCenter([116.305467, 39.807761]) // 设置中心点
-    const marker = new AMap.Marker({
-      position: [117.305467, 39.007761]
+    this.handleConverGps(position).then((res: any) => {
+      const marker = new AMap.Marker({
+        position: [res.lng, res.lat]
+      })
+      this.map.setFitView([marker])
+      this.map.setZoom(15)
     })
-    this.map.setFitView([marker])
   }
 
   /**
@@ -258,11 +315,28 @@ export default class extends Vue {
    * @Return:
    * @Date: 2019-09-30 18:58:06
    */
-  private async requestMarkerData() {
-    const resData = await getMarkerData()
+  private async requestMarkerData(data: IMarkerParams) {
+    const resData = await getMarkerData(data)
     const { ok, dataList, message } = resData
     if (!ok) return this.$elementMessage(message || '轨迹信息获取失败')
     this.drawMarker(dataList)
+  }
+
+  /**
+   * @message: gps 坐标转换高德坐标
+   * @parameter:
+   * @Return:
+   * @Date: 2019-10-03 10:37:33
+   */
+  private handleConverGps(gps: number[]) {
+    return new Promise(resolve => {
+      AMap.convertFrom(gps, 'gps', (status: number, result: any) => {
+        if (result.info === 'ok') {
+          const lnglats = result.locations // Array.<LngLat>
+          resolve(lnglats[0])
+        }
+      })
+    })
   }
 
   /**
@@ -273,28 +347,34 @@ export default class extends Vue {
    */
   private drawMarker(markers: any[]) {
     markers.forEach(marker => {
-      const marke = new AMap.Marker({
-        map: this.map,
-        // icon: marker.icon,
-        content: marker.content,
-        position: [marker.position[0], marker.position[1]],
-        offset: new AMap.Pixel(-13, -30)
-      })
-      // 设置点标记的动画效果，此处为弹跳效果
-      marke.setAnimation('AMAP_ANIMATION_BOUNCE')
-      // 实例化信息窗体
-      const title = '设备1<span style="font-size:11px;color:#F00;">报警</span>'
-      const content: any[] = []
-      content.push('地址：北京市朝阳区阜通东大街6号院3号楼东北8.3公里')
-      content.push('位置更新于：2019-10-01 20:10:09')
-      content.push(
-        '设备信息: | 电量:60% | 信号:强 | 更新时间 2019-09-12 09:10:20'
-      )
-      // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
-      // 鼠标点击marker弹出自定义的信息窗体
-      AMap.event.addListener(marke, 'click', () => {
-        const infoWindow = this.createInfoWindow(title, content)
-        infoWindow.open(this.map, marke.getPosition())
+      const lnglats = this.handleConverGps([
+        marker.position[0],
+        marker.position[1]
+      ]).then((res: any) => {
+        const marke = new AMap.Marker({
+          map: this.map,
+          // icon: marker.icon,
+          content: marker.content,
+          position: [res.lng, res.lat],
+          // position: [marker.position[0], marker.position[1]],
+          offset: new AMap.Pixel(-13, -30)
+        })
+        // 设置点标记的动画效果，此处为弹跳效果
+        if (marker.type === 0) marke.setAnimation('AMAP_ANIMATION_BOUNCE')
+        // 实例化信息窗体
+        const title = `${marker.device_name}<span style="font-size:11px;color:#F00;">报警</span>`
+        const content: any[] = []
+        content.push(`地址：${marker.address}`)
+        content.push(`位置更新于：${marker.update_time}`)
+        content.push(
+          `设备信息: | 电量:${marker.electric} | 信号:${marker.signal} | 更新时间 ${marker.update_time}`
+        )
+        // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
+        // 鼠标点击marker弹出自定义的信息窗体
+        AMap.event.addListener(marke, 'click', () => {
+          const infoWindow = this.createInfoWindow(title, content)
+          infoWindow.open(this.map, marke.getPosition())
+        })
       })
     })
   }
@@ -306,6 +386,8 @@ export default class extends Vue {
    * @Date: 2019-09-30 17:26:22
    */
   private addPolyLine(testTrack: any[]) {
+    console.log('addPolyLine: ')
+    testTrack = this.testTrack
     const fn = R.pipe(
       this.hanleTrakData,
       this.createPolyLine
@@ -350,6 +432,8 @@ export default class extends Vue {
         map.addControl(mapType)
       }
     )
+    map.setMapStyle('amap://styles/whitesmoke')
+    // map.setFeatures(['road','point']); // 多个种类要素显示
     return map
   }
 
@@ -386,8 +470,6 @@ export default class extends Vue {
   removeMarker(marker: any) {
     this.map.remove(marker)
   }
-
-  private onSearch() {}
 }
 </script>
 
@@ -407,15 +489,21 @@ export default class extends Vue {
       flex: 1;
     }
     .main_bottom {
+      width: 100%;
       min-height: 100px;
       background: #2e4155;
       border-radius: 8px;
       color: white;
       font-size: 20px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
       .left {
+        width: 150px;
+        text-align: center;
       }
       .right {
+        line-height: 40px;
       }
     }
   }
