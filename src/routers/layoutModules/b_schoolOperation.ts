@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:39:02
- * @LastEditTime: 2019-10-02 21:55:13
+ * @LastEditTime: 2019-10-04 22:26:16
  * @LastEditors: Please set LastEditors
  */
 import Layout from '@/layout/index.vue'
@@ -13,7 +13,7 @@ export default [
     redirect: '/school_options/school_radar',
     meta: {
       title: '设备设置',
-      icon: 'example'
+      icon: 'table'
     },
     children: [
       {
@@ -22,7 +22,7 @@ export default [
         meta: {
           title: '设备设置',
           keepAlive: true,
-          icon: 'example',
+          icon: 'table',
           type: 'radar'
         }
       },

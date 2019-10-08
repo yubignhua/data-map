@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from '@/utils/cookies'
+// import { getToken } from '@/utils/cookies'
 import Auth from './auth'
 // 创建axios实例
 const api = axios.create({
@@ -12,7 +12,7 @@ const api = axios.create({
 
 api.interceptors.request.use(function(config) {
   // Do something before request is sent
-  config.headers['Authorization'] = getToken()
+  // config.headers['Authorization'] = getToken()
   return config
 }, function(error) {
   // Do something with request error

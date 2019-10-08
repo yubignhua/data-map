@@ -3,7 +3,7 @@
 // @ts-ignore
 import icon from 'vue-svgicon'
 icon.register({
-  'teach': {
+  '课外辅导': {
     width: 200,
     height: 200,
     viewBox: '0 0 1024 1024',

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:37:29
- * @LastEditTime: 2019-10-02 21:48:19
+ * @LastEditTime: 2019-10-04 20:31:40
  * @LastEditors: Please set LastEditors
  */
 import Layout from '@/layout/index.vue'
@@ -14,7 +14,7 @@ export default [
     redirect: '/mainboard/mainboard',
     meta: {
       title: '救援地图',
-      icon: 'dashboard'
+      icon: 'map'
     },
     children: [
       {
@@ -22,7 +22,7 @@ export default [
         component: () => import(/* webpackChunkName: "workboard" */ '@/views/mainboard/index.vue'),
         meta: {
           title: '救援地图',
-          icon: 'dashboard',
+          icon: 'map',
           keepAlive: true
         }
       },
