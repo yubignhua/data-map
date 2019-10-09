@@ -5,18 +5,22 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import echarts from 'echarts';
-import { debounce } from '@/utils';
+import { debounce } from '@/utils/index.ts';
 // echarts theme
 require('echarts/theme/macarons');
 
 @Component
 export default class PieChart extends Vue {
-  @Prop({default: 'chart'}) className!: string;
-  @Prop({default: '100%'}) width!: string;
-  @Prop({default: '300px'}) height!: string;
+  // @Prop({default: 'chart'}) className!: string;
+  // @Prop({default: '100%'}) width!: string;
+  // @Prop({default: '600px'}) height!: string;
 
-  chart: any = null;
-  resizeHandler = debounce(() => {
+  private className:string = 'chart'
+  private width:string = '100%'
+  private height:string = '400px'
+  private chart: any = null;
+
+  private resizeHandler = debounce(() => {
     if (this.chart) {
       this.chart.resize();
     }
@@ -24,7 +28,6 @@ export default class PieChart extends Vue {
 
   mounted() {
     this.initChart();
-
     window.addEventListener('resize', this.resizeHandler);
   }
 
@@ -32,14 +35,18 @@ export default class PieChart extends Vue {
     if (!this.chart) {
       return;
     }
-    window.removeEventListener('resize', this.resizeHandler);
+    window.removeEventListener('resize', this.resizeHan dler);
     this.chart.dispose();
     this.chart = null;
   }
 
+  /**
+   * @message: 初始化echart
+   * @params: 
+   * @Return: 
+   */
   initChart() {
     this.chart = echarts.init(this.$el as any, 'macarons');
-
     this.chart.setOption({
       tooltip: {
         trigger: 'item',
@@ -48,22 +55,22 @@ export default class PieChart extends Vue {
       legend: {
         left: 'center',
         bottom: '10',
-        data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+        data: ['在线', '离线', 'Forex', 'Gold', 'Forecasts']
       },
       calculable: true,
       series: [
         {
-          name: 'WEEKLY WRITE ARTICLES',
+          name: '数据统计',
           type: 'pie',
           roseType: 'radius',
           radius: [15, 95],
-          center: ['50%', '38%'],
+          center: ['50%', '50%'],
           data: [
-            {value: 320, name: 'Industries'},
-            {value: 240, name: 'Technology'},
-            {value: 149, name: 'Forex'},
-            {value: 100, name: 'Gold'},
-            {value: 59, name: 'Forecasts'}
+            {value: 320, name: '在线'},
+            {value: 240, name: '离线'},
+            // {value: 149, name: 'Forex'},
+            // {value: 100, name: 'Gold'},
+            // {value: 59, name: 'Forecasts'}
           ],
           animationEasing: 'cubicInOut',
           animationDuration: 2600
