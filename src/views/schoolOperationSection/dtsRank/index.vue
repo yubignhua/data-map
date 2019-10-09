@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}"/>
+  <div :class="className" :style="{height:height,width:width}" />
 </template>
 
 <script lang="ts">
@@ -11,20 +11,13 @@ require('echarts/theme/macarons');
 
 @Component
 export default class PieChart extends Vue {
-  // @Prop({default: 'chart'}) className!: string;
-  // @Prop({default: '100%'}) width!: string;
-  // @Prop({default: '600px'}) height!: string;
+  
 
   private className:string = 'chart'
   private width:string = '100%'
   private height:string = '400px'
-  private chart: any = null;
+  private chart: any = null
 
-  private resizeHandler = debounce(() => {
-    if (this.chart) {
-      this.chart.resize();
-    }
-  }, 100);
 
   mounted() {
     this.initChart();
@@ -40,12 +33,19 @@ export default class PieChart extends Vue {
     this.chart = null;
   }
 
+  private resizeHandler = debounce(() => {
+    if (this.chart) {
+      this.chart.resize();
+    }
+  }, 100)
+
+
   /**
    * @message: 初始化echart
    * @params: 
    * @Return: 
    */
-  initChart() {
+  private initChart():void {
     this.chart = echarts.init(this.$el as any, 'macarons');
     this.chart.setOption({
       tooltip: {
