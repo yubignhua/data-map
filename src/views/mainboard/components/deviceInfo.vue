@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-10-03 14:12:01
+ * @LastEditTime: 2019-10-03 14:12:01
+ * @LastEditors: your name
+ -->
 <template>
   <div class="device_item">
     <div class="device_name line_item">

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-09 07:40:37
+ * @LastEditTime: 2019-10-09 08:45:45
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -78,7 +78,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { getAllUser } from '@/services/dataMap/index'
 import R from '@/utils/freePiont'
 import { dataList, massMarkes } from './data'
-import DeviceInfo from './components/deviceInfo.vue'
+import DeviceInfo from '@/views/mainboard/components/deviceInfo.vue'
 interface IMarkerParams {
   page: number
   perpage: number
