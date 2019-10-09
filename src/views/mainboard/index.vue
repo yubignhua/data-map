@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-07 15:22:52
+ * @LastEditTime: 2019-10-09 07:40:37
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -77,7 +77,7 @@ import { getIndexData } from '@/services/dtsRank/index'
 import { Component, Vue } from 'vue-property-decorator'
 import { getAllUser } from '@/services/dataMap/index'
 import R from '@/utils/freePiont'
-import { markerList, dataList, massMarkes } from './data'
+import { dataList, massMarkes } from './data'
 import DeviceInfo from './components/deviceInfo.vue'
 interface IMarkerParams {
   page: number
@@ -134,10 +134,10 @@ export default class extends Vue {
       // 地图图块加载完成后触发
       console.log('地图加载完成')
     })
-    // this.drawMarker(this.markers)
-    // getAllUser().then(res => {
-    //   console.log(res)
-    // })
+    this.drawMarker(this.markers)
+    getAllUser().then(res => {
+      console.log(res)
+    })
 
     // const style = [
     //   {

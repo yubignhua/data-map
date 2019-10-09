@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-02 21:19:52
- * @LastEditTime: 2019-10-04 16:37:25
+ * @LastEditTime: 2019-10-09 08:06:19
  * @LastEditors: Please set LastEditors
  */
 export const markerList = [
