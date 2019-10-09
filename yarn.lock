@@ -950,6 +950,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/echarts@^4.1.4":
+  version "4.1.15"
+  resolved "https://registry.yarnpkg.com/@types/echarts/-/echarts-4.1.15.tgz#00ec3a3af3c486b6b1b13edc26a4676d4e6cc668"
+  integrity sha512-WzkfgZ4TxfFiLEQBCkf+VDdssU8Nxu6qgzpca/0c3M89mf0JM0F8tMcRzoi+h6+5wfLxsRzydbTL3ORJnksn4A==
+  dependencies:
+    "@types/zrender" "*"
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -1065,6 +1072,11 @@
   version "12.0.12"
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-12.0.12.tgz#45dd1d0638e8c8f153e87d296907659296873916"
   integrity sha512-SOhuU4wNBxhhTHxYaiG5NY4HBhDIDnJF60GU+2LqHAdKKer86//e4yg69aENCtQ04n0ovz+tq2YPME5t5yp4pw==
+
+"@types/zrender@*":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/zrender/-/zrender-4.0.0.tgz#a6806f12ec4eccaaebd9b0d816f049aca6188fbd"
+  integrity sha512-s89GOIeKFiod2KSqHkfd2rzx+T2DVu7ihZCBEBnhFrzvQPUmzvDSBot9Fi1DfMQm9Odg+rTqoMGC38RvrwJK2w==
 
 "@typescript-eslint/eslint-plugin@^1.1.0":
   version "1.12.0"
@@ -4208,6 +4220,13 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
+
+echarts@^4.1.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/echarts/-/echarts-4.3.0.tgz#3728c2b5e8f277898f7299b4fe1cfc537170abd5"
+  integrity sha512-tX2dAyhI9D78eVrlKhqJGdrM7Ku599HHvPxT2Pu6tgb/dBP8tYmkWjn8r1Ea9oABQxAKXr0p2/tG1OzKdzULbw==
+  dependencies:
+    zrender "4.1.0"
 
 editorconfig@^0.15.3:
   version "0.15.3"
@@ -12680,3 +12699,8 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+zrender@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/zrender/-/zrender-4.1.0.tgz#866ab97d0744c473d9b314ac5a89e7207c140608"
+  integrity sha512-PkWDpBSRIZAKyBBSkizWCP5/bIL5s/+W+FM/AwkivN4m4QCVH04PS0nJmBB/E6CnUNQv9ZPfIV4tthg1qEP1gg==

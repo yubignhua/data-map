@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-02 21:19:52
- * @LastEditTime: 2019-10-09 08:06:19
+ * @LastEditTime: 2019-10-09 17:25:51
  * @LastEditors: Please set LastEditors
  */
 export const markerList = [
@@ -112,5 +112,5 @@ export const massMarkes = [
     lnglat: [116.805285, 39.900989], // 点标记位置
     name: 'beijing',
     id: 6
-  },
+  }
 ]
