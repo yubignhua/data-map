@@ -1,13 +1,23 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-30 11:40:13
+ * @LastEditTime: 2019-09-30 11:40:13
+ * @LastEditors: your name
+ -->
 <template>
-  <div :class="className" :style="{height:height,width:width}"/>
+  <div
+    :class="className"
+    :style="{height: height,width: width}"
+  />
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import echarts from 'echarts';
-import { debounce } from '@/utils/index.ts';
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import echarts from 'echarts'
+import { debounce } from '@/utils/index.ts'
 // echarts theme
-require('echarts/theme/macarons');
+require('echarts/theme/macarons')
 
 @Component
 export default class PieChart extends Vue {
@@ -21,26 +31,26 @@ export default class PieChart extends Vue {
   private chart: any = null;
   private resizeHandler = debounce(() => {
     if (this.chart) {
-      this.chart.resize();
+      this.chart.resize()
     }
   }, 100);
 
   mounted() {
-    this.initChart();
-    window.addEventListener('resize', this.resizeHandler);
+    this.initChart()
+    window.addEventListener('resize', this.resizeHandler)
   }
 
   beforeDestroy() {
     if (!this.chart) {
-      return;
+      return
     }
-    window.removeEventListener('resize', this.resizeHandler);
-    this.chart.dispose();
-    this.chart = null;
+    window.removeEventListener('resize', this.resizeHandler)
+    this.chart.dispose()
+    this.chart = null
   }
 
   initChart() {
-    this.chart = echarts.init(this.$el as any, 'macarons');
+    this.chart = echarts.init(this.$el as any, 'macarons')
 
     this.chart.setOption({
       tooltip: {
@@ -61,8 +71,8 @@ export default class PieChart extends Vue {
           radius: [15, 95],
           center: ['50%', '50%'],
           data: [
-            {value: 320, name: '在线'},
-            {value: 240, name: '离线'},
+            { value: 320, name: '在线' },
+            { value: 240, name: '离线' }
             // {value: 149, name: 'Forex'},
             // {value: 100, name: 'Gold'},
             // {value: 59, name: 'Forecasts'}
@@ -71,8 +81,7 @@ export default class PieChart extends Vue {
           animationDuration: 2600
         }
       ]
-    });
+    })
   }
 }
 </script>
-

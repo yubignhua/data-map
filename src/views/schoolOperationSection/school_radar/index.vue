@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:39:44
- * @LastEditTime: 2019-10-09 08:05:43
+ * @LastEditTime: 2019-10-10 08:36:37
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -15,14 +15,14 @@
             <h2>设备列表</h2>
           </div>
           <div class="selected_box">
-            <el-select v-model="value1" placeholder="请选择" @change="onSelectChange1">
+            <!-- <el-select v-model="value1" placeholder="请选择" @change="onSelectChange1">
               <el-option
                 v-for="item in options1"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               />
-            </el-select>
+            </el-select>-->
           </div>
         </div>
         <div class="search_input_box">
@@ -34,8 +34,18 @@
             @change="onInputChange"
             @keyup.enter.native="onSearch"
           />
-          <el-button type="defalut" @click="onSearch">查询</el-button>
-          <el-button type="defalut" @click="onAddDevice()">添加设备</el-button>
+          <el-button
+            type="defalut"
+            @click="onSearch"
+          >
+            查询
+          </el-button>
+          <el-button
+            type="primary"
+            @click="onAddDevice()"
+          >
+            添加设备
+          </el-button>
         </div>
       </div>
       <!-- 表单 -->
@@ -46,20 +56,70 @@
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column align="center" prop="device_name" label="设备名称" />
-        <el-table-column align="center" prop="imei" label="设备码" />
-        <el-table-column align="center" prop="address" label="设备所在地址" />
-        <el-table-column align="center" prop="position" label="经纬度" />
-        <el-table-column align="center" prop="electric" label="电量" />
-        <el-table-column align="center" prop="signal" label="信号强度" />
-        <el-table-column align="center" prop="online_state" label="在线状态" />
-        <el-table-column align="center" prop="update_time" label="更新时间" />
-        <el-table-column align="center" label="操作">
+        <el-table-column
+          align="center"
+          prop="device_name"
+          label="设备名称"
+        />
+        <el-table-column
+          align="center"
+          prop="imei"
+          label="设备码"
+        />
+        <el-table-column
+          align="center"
+          prop="address"
+          label="设备所在地址"
+        />
+        <el-table-column
+          align="center"
+          prop="position"
+          label="经纬度"
+        />
+        <el-table-column
+          align="center"
+          prop="electric"
+          label="电量"
+        />
+        <el-table-column
+          align="center"
+          prop="signal"
+          label="信号强度"
+        />
+        <el-table-column
+          align="center"
+          prop="online_state"
+          label="在线状态"
+        />
+        <el-table-column
+          align="center"
+          prop="update_time"
+          label="更新时间"
+        />
+        <el-table-column
+          align="center"
+          label="操作"
+        >
           <template slot-scope="scope">
             <router-link
-              :to="{path: '/school_options/radar_detail', query: {schoolId: scope.row.school_id}}">
-              <el-button size="mini">操作</el-button>
+              :to="{path: '/school_options/radar_detail', query: {schoolId: scope.row.school_id}}"
+            >
+              <el-button
+                class="btn_m"
+                type="primary"
+                size="mini"
+              >
+                编辑
+              </el-button>
             </router-link>
+            <el-button
+              class="btn_m"
+              type="danger"
+              size="mini"
+              @click="onOpen"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -158,6 +218,25 @@ export default class extends Vue {
     })
   }
 
+  /**
+   * @message:
+   * @parameter:
+   * @Return:
+   * @Date: 2019-10-09 22:58:06
+   */
+  private onOpen() {
+    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      this.$message({
+        type: 'success',
+        message: '删除成功!'
+      })
+    })
+  }
+
   // 监听搜索输入框
   private onInputChange(e: string): void {
     this.redarParams.keyword = e.trim()
@@ -199,6 +278,9 @@ export default class extends Vue {
   margin-top: 10px;
   background-color: #ffffff;
   padding: 20px;
+  .btn_m {
+    margin: 5px;
+  }
   .el-table thead.is-group th {
     background: #48505a;
     color: white;

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-09 08:45:45
+ * @LastEditTime: 2019-10-09 22:39:51
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -24,6 +24,7 @@
         <div class="app_right_title">用户列表</div>
         <div class="search_box section">
           <el-input
+            size="mini"
             v-model="keyword"
             class="search_btn"
             placeholder="请输入内容"
@@ -31,10 +32,10 @@
             clearable
             @keyup.enter.native="onSearch"
           />
-          <el-button type="primary" plain @click="onSearch">搜索</el-button>
+          <el-button size="mini" type="primary" plain @click="onSearch">搜索</el-button>
         </div>
         <div class="device_group section">
-          <el-select v-model="groupValue" placeholder="设备分组">
+          <el-select size="mini" v-model="groupValue" placeholder="设备分组">
             <template slot="prepend">Http://</template>
             <el-option
               v-for="item in options"
@@ -46,9 +47,9 @@
         </div>
         <div class="line_state_box section">
           <el-radio-group @change="onHandleStateChange" v-model="lineState">
-            <el-radio-button label="1">在线</el-radio-button>
-            <el-radio-button label="2">离线</el-radio-button>
-            <el-radio-button label="3">全部</el-radio-button>
+            <el-radio-button size="mini" label="1">在线</el-radio-button>
+            <el-radio-button size="mini" label="2">离线</el-radio-button>
+            <el-radio-button size="mini" label="3">全部</el-radio-button>
           </el-radio-group>
         </div>
         <div class="content_box">
@@ -472,12 +473,17 @@ export default class extends Vue {
   }
 }
 </script>
-
+<style>
+ .el-radio-button--medium .el-radio-button__inner {
+    padding: 5px 20px;
+  }
+</style>
 <style lang="scss" scoped>
 .main-map-container {
   min-height: 100%;
   background-color: #ffffff;
   display: flex;
+ 
   .app-container {
     min-height: 100%;
     display: flex;
@@ -537,7 +543,7 @@ export default class extends Vue {
       .device_group {
         // display: flex;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
       .line_state_box {
         text-align: center;
@@ -548,7 +554,7 @@ export default class extends Vue {
         background: white;
         border-radius: 8px;
         position: absolute;
-        top: 240px;
+        top: 210px;
         margin-right: 20px;
         bottom: 20px;
         width: 90%;
