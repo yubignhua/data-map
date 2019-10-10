@@ -2,22 +2,29 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:40:13
- * @LastEditTime: 2019-09-30 11:40:13
- * @LastEditors: your name
+ * @LastEditTime: 2019-10-10 11:42:37
+ * @LastEditors: Please set LastEditors
  -->
 <template>
-  <div
-    :class="className"
-    :style="{height: height,width: width}"
-  />
+  <div :class="className" :style="{height: height,width: width}" />
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import echarts from 'echarts'
 import { debounce } from '@/utils/index.ts'
+import { getAllUser } from '@/services/dataMap/index'
 // echarts theme
 require('echarts/theme/macarons')
+
+interface IRes extends IResponseData {
+  data: {
+    dataList: any[],
+    home: string,
+    type: number,
+    getData(param:number):void
+  }
+}
 
 @Component
 export default class PieChart extends Vue {
@@ -25,19 +32,31 @@ export default class PieChart extends Vue {
   // @Prop({default: '100%'}) width!: string;
   // @Prop({default: '600px'}) height!: string;
 
-  private className:string = 'chart'
-  private width:string = '100%'
-  private height:string = '400px'
-  private chart: any = null;
-  private resizeHandler = debounce(() => {
-    if (this.chart) {
-      this.chart.resize()
+  private className: string = 'chart'
+  private width: string = '100%'
+  private height: string = '400px'
+  private chart: any = null
+  private data: IRes = {
+    status_code: 1,
+    ok: 1,
+    data: {
+      dataList: [],
+      home: 'asdf',
+      type: 1,
+      getData(){}
     }
-  }, 100);
+  }
 
   mounted() {
+    this.getData()
     this.initChart()
     window.addEventListener('resize', this.resizeHandler)
+  }
+
+  private async getData():Promise<any>{
+    const resData = await getAllUser<IRes>()
+    console.log('resData: ', resData);
+
   }
 
   beforeDestroy() {
@@ -49,7 +68,13 @@ export default class PieChart extends Vue {
     this.chart = null
   }
 
-  initChart() {
+  private resizeHandler = debounce(() => {
+    if (this.chart) {
+      this.chart.resize()
+    }
+  }, 100)
+
+  private initChart() {
     this.chart = echarts.init(this.$el as any, 'macarons')
 
     this.chart.setOption({

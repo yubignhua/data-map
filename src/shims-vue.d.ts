@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-22 15:26:13
- * @LastEditTime: 2019-09-30 16:05:53
+ * @LastEditTime: 2019-10-10 11:25:32
  * @LastEditors: Please set LastEditors
  */
 declare module '*.vue' {

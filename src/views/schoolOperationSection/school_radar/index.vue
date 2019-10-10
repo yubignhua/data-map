@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:39:44
- * @LastEditTime: 2019-10-10 08:36:37
+ * @LastEditTime: 2019-10-10 08:39:03
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -225,7 +225,7 @@ export default class extends Vue {
    * @Date: 2019-10-09 22:58:06
    */
   private onOpen() {
-    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+    this.$confirm('此操作将永久删除该设备, 是否继续?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
