@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:40:13
- * @LastEditTime: 2019-10-10 11:42:37
+ * @LastEditTime: 2019-10-10 14:41:04
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -28,9 +28,6 @@ interface IRes extends IResponseData {
 
 @Component
 export default class PieChart extends Vue {
-  // @Prop({default: 'chart'}) className!: string;
-  // @Prop({default: '100%'}) width!: string;
-  // @Prop({default: '600px'}) height!: string;
 
   private className: string = 'chart'
   private width: string = '100%'
@@ -53,12 +50,6 @@ export default class PieChart extends Vue {
     window.addEventListener('resize', this.resizeHandler)
   }
 
-  private async getData():Promise<any>{
-    const resData = await getAllUser<IRes>()
-    console.log('resData: ', resData);
-
-  }
-
   beforeDestroy() {
     if (!this.chart) {
       return
@@ -68,15 +59,35 @@ export default class PieChart extends Vue {
     this.chart = null
   }
 
+   /**
+   * @message: 获取数据
+   * @params: 
+   * @Return: 
+   */
+  private async getData():Promise<any>{
+    const resData = await getAllUser<IRes>()
+    console.log('resData: ', resData);
+
+  }
+
+  /**
+   * @message: 监听窗口调整大小
+   * @params: 
+   * @Return: 
+   */
   private resizeHandler = debounce(() => {
     if (this.chart) {
       this.chart.resize()
     }
   }, 100)
 
+  /**
+   * @message: 初始化 echart
+   * @params: 
+   * @Return: 
+   */
   private initChart() {
     this.chart = echarts.init(this.$el as any, 'macarons')
-
     this.chart.setOption({
       tooltip: {
         trigger: 'item',
