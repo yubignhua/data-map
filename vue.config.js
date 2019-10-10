@@ -18,17 +18,19 @@ module.exports = {
     'vuex-module-decorators'
   ],
   pluginOptions: {
-    // dll: {
-    //   entry: ['vue-route', 'vue-router'],
-    //   output: '/Users/yubh/haoweilai/cactus-data-pc/public/dll',
-    //   open: true
-    // },
     'style-resources-loader': {
       preProcessor: 'scss',
       patterns: [
-        path.resolve(__dirname, 'src/styles/_variables.scss'),
-        path.resolve(__dirname, 'src/styles/_mixins.scss')
+        '/Users/yubh/Desktop/workspace/data-map/src/styles/_variables.scss',
+        '/Users/yubh/Desktop/workspace/data-map/src/styles/_mixins.scss'
       ]
+    },
+    dll: {
+      entry: {
+        vendor: ['vue', 'vue-router', 'element-ui']
+      },
+      open: true,
+      inject: true
     }
   },
   configureWebpack: (config) => {
