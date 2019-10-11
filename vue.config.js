@@ -26,10 +26,9 @@ module.exports = {
       ]
     },
     dll: {
-      entry: {
-        vendor: ['vue', 'vue-router', 'element-ui']
-      },
-      open: true,
+      entry: ['element-ui', 'echarts', 'ali-oss', 'js-cookie'],
+      output: path.join(__dirname, './public/vendor'),
+      open: 'auto',
       inject: true
     }
   },

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-09 22:39:51
+ * @LastEditTime: 2019-10-11 20:06:53
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -94,6 +94,7 @@ interface IMarkerParams {
   components: { DeviceInfo }
 })
 export default class extends Vue {
+  private timer:any = 0 // 定时器
   private lineState: string = '在线'
   private options: any[] = [
     {
@@ -174,6 +175,10 @@ export default class extends Vue {
     //   size: new AMap.Size(11, 11), // 图标大小
     //   anchor: new AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
     // })
+  }
+
+  beforeDestroy(){
+    clearTimeout(this.timer)
   }
 
   /**
@@ -319,7 +324,13 @@ export default class extends Vue {
   private async requestMarkerData(data: IMarkerParams) {
     const resData = await getMarkerData(data)
     const { ok, dataList, message } = resData
-    if (!ok) return this.$elementMessage(message || '轨迹信息获取失败')
+    if (!ok) {
+      clearTimeout(this.timer)
+      return this.$elementMessage(message || '轨迹信息获取失败')
+    }
+    this.timer = setTimeout(() => {
+      this.requestMarkerData(this.markerParams)
+    }, 5000)
     this.drawMarker(dataList)
   }
 
@@ -339,6 +350,11 @@ export default class extends Vue {
       })
     })
   }
+
+
+  
+
+  
 
   /**
    * @message: 绘制坐地点
@@ -474,16 +490,16 @@ export default class extends Vue {
 }
 </script>
 <style>
- .el-radio-button--medium .el-radio-button__inner {
-    padding: 5px 20px;
-  }
+.el-radio-button--medium .el-radio-button__inner {
+  padding: 5px 20px;
+}
 </style>
 <style lang="scss" scoped>
 .main-map-container {
   min-height: 100%;
   background-color: #ffffff;
   display: flex;
- 
+
   .app-container {
     min-height: 100%;
     display: flex;

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:39:44
- * @LastEditTime: 2019-10-10 17:15:41
+ * @LastEditTime: 2019-10-10 22:34:00
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -34,20 +34,13 @@
             @change="onInputChange"
             @keyup.enter.native="onSearch"
           />
-          <el-button
-            type="defalut"
-            @click="onSearch"
-          >
-            查询
-          </el-button>
-          <el-button
-            type="primary"
-            @click="onAddDevice()"
-          >
-            添加设备
-          </el-button>
+          <el-button type="defalut" @click="onSearch">查询</el-button>
+          <el-button type="primary" @click="onAddDevice()">添加设备</el-button>
         </div>
       </div>
+  
+
+  
       <!-- 表单 -->
       <el-table
         ref="table"
@@ -56,70 +49,22 @@
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column
-          align="center"
-          prop="device_name"
-          label="设备名称"
-        />
-        <el-table-column
-          align="center"
-          prop="imei"
-          label="设备码"
-        />
-        <el-table-column
-          align="center"
-          prop="address"
-          label="设备所在地址"
-        />
-        <el-table-column
-          align="center"
-          prop="position"
-          label="经纬度"
-        />
-        <el-table-column
-          align="center"
-          prop="electric"
-          label="电量"
-        />
-        <el-table-column
-          align="center"
-          prop="signal"
-          label="信号强度"
-        />
-        <el-table-column
-          align="center"
-          prop="online_state"
-          label="在线状态"
-        />
-        <el-table-column
-          align="center"
-          prop="update_time"
-          label="更新时间"
-        />
-        <el-table-column
-          align="center"
-          label="操作"
-        >
+        <el-table-column align="center" prop="device_name" label="设备名称" />
+        <el-table-column align="center" prop="imei" label="设备码" />
+        <el-table-column align="center" prop="address" label="设备所在地址" />
+        <el-table-column align="center" prop="position" label="经纬度" />
+        <el-table-column align="center" prop="electric" label="电量" />
+        <el-table-column align="center" prop="signal" label="信号强度" />
+        <el-table-column align="center" prop="online_state" label="在线状态" />
+        <el-table-column align="center" prop="update_time" label="更新时间" />
+        <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <router-link
               :to="{path: '/school_options/radar_detail', query: {schoolId: scope.row.school_id}}"
             >
-              <el-button
-                class="btn_m"
-                type="primary"
-                size="mini"
-              >
-                编辑
-              </el-button>
+              <el-button class="btn_m" type="primary" size="mini">编辑</el-button>
             </router-link>
-            <el-button
-              class="btn_m"
-              type="danger"
-              size="mini"
-              @click="onOpen"
-            >
-              删除
-            </el-button>
+            <el-button class="btn_m" type="danger" size="mini" @click="onOpen">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -134,6 +79,13 @@
         />
       </div>
     </template>
+    <el-dialog title="添加设备" :visible.sync="dialogVisible" width="60%">
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -165,6 +117,7 @@ interface ISelectItem {
 })
 export default class extends Vue {
   private input2: string = ''
+  private dialogVisible:boolean = false
   private tableData: any[] = dataList
 
   private currentPage: number = 0
@@ -214,7 +167,7 @@ export default class extends Vue {
     this.totalPage = total
     this.date = date
     this.$nextTick(() => {
-      (this.$refs.table as any).bodyWrapper.scrollTop = 0
+      ;(this.$refs.table as any).bodyWrapper.scrollTop = 0
     })
   }
 
@@ -267,6 +220,7 @@ export default class extends Vue {
   }
   // 监听添加设备
   private onAddDevice(): void {
+    this.dialogVisible = true
     // this.requetRedarData(this.redarParams)
   }
 }

@@ -734,16 +734,6 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
-"@liwb/vue-cli-plugin-dll@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.npm.taobao.org/@liwb/vue-cli-plugin-dll/download/@liwb/vue-cli-plugin-dll-1.0.6.tgz#51b54285dbb4de203f4b95f33855ec16071fe16c"
-  integrity sha1-UbVChdu03iA/S5XzOFXsFgcf4Ww=
-  dependencies:
-    add-asset-html-webpack-plugin "^3.1.3"
-    friendly-errors-webpack-plugin "^1.7.0"
-    mini-css-extract-plugin "^0.6.0"
-    vue-loader "^15.7.0"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1487,7 +1477,7 @@ acorn@^6.0.2, acorn@^6.0.7, acorn@^6.1.1, acorn@^6.2.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.2.0.tgz#67f0da2fc339d6cfb5d6fb244fd449f33cd8bbe3"
   integrity sha512-8oe72N3WPMjA+2zVG71Ia0nXZ8DpQH+QyyHO+p06jT8eg8FGG3FbcUIi8KziHlAfheJQZeoqbvq1mQSQHXKYLw==
 
-add-asset-html-webpack-plugin@^3.1.3:
+add-asset-html-webpack-plugin@^3.1.2:
   version "3.1.3"
   resolved "https://registry.npm.taobao.org/add-asset-html-webpack-plugin/download/add-asset-html-webpack-plugin-3.1.3.tgz#bec77dc8182644a58a0eebcae7d1f9eb162dafdf"
   integrity sha1-vsd9yBgmRKWKDuvK59H56xYtr98=
@@ -6275,6 +6265,15 @@ mimic-fn@^2.0.0:
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
   integrity sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
 
+mini-css-extract-plugin@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.npm.taobao.org/mini-css-extract-plugin/download/mini-css-extract-plugin-0.5.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmini-css-extract-plugin%2Fdownload%2Fmini-css-extract-plugin-0.5.0.tgz#ac0059b02b9692515a637115b0cc9fed3a35c7b0"
+  integrity sha1-rABZsCuWklFaY3EVsMyf7To1x7A=
+  dependencies:
+    loader-utils "^1.1.0"
+    schema-utils "^1.0.0"
+    webpack-sources "^1.1.0"
+
 mini-css-extract-plugin@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.6.0.tgz#a3f13372d6fcde912f3ee4cd039665704801e3b9"
@@ -9693,6 +9692,16 @@ vue-cli-plugin-branch-release@^0.3.2:
   integrity sha512-ZNBhbtTrr4ac2tnkPoBB+dNuu4nxmhXhloFiZRNL9zVRhJmmRPZPpgOBBK886s1OIwjmv0pPGYVdGXJj02yDfQ==
   dependencies:
     remote-origin-url "^2.0.0"
+
+vue-cli-plugin-dll@^1.1.11:
+  version "1.1.11"
+  resolved "https://registry.npm.taobao.org/vue-cli-plugin-dll/download/vue-cli-plugin-dll-1.1.11.tgz#e2b13e014ad6636dcc59569ba5a07b81fb64e358"
+  integrity sha1-4rE+AUrWY23MWVabpaB7gftk41g=
+  dependencies:
+    add-asset-html-webpack-plugin "^3.1.2"
+    friendly-errors-webpack-plugin "^1.7.0"
+    mini-css-extract-plugin "^0.5.0"
+    vue-loader "^15.7.0"
 
 vue-cli-plugin-element@^1.0.1:
   version "1.0.1"
