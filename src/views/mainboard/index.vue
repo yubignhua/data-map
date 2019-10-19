@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-11 20:06:53
+ * @LastEditTime: 2019-10-11 22:09:40
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -24,8 +24,8 @@
         <div class="app_right_title">用户列表</div>
         <div class="search_box section">
           <el-input
-            size="mini"
             v-model="keyword"
+            size="mini"
             class="search_btn"
             placeholder="请输入内容"
             prefix-icon="el-icon-search"
@@ -35,7 +35,7 @@
           <el-button size="mini" type="primary" plain @click="onSearch">搜索</el-button>
         </div>
         <div class="device_group section">
-          <el-select size="mini" v-model="groupValue" placeholder="设备分组">
+          <el-select v-model="groupValue" size="mini" placeholder="设备分组">
             <template slot="prepend">Http://</template>
             <el-option
               v-for="item in options"
@@ -46,7 +46,7 @@
           </el-select>
         </div>
         <div class="line_state_box section">
-          <el-radio-group @change="onHandleStateChange" v-model="lineState">
+          <el-radio-group v-model="lineState" @change="onHandleStateChange">
             <el-radio-button size="mini" label="1">在线</el-radio-button>
             <el-radio-button size="mini" label="2">离线</el-radio-button>
             <el-radio-button size="mini" label="3">全部</el-radio-button>
@@ -54,19 +54,19 @@
         </div>
         <div class="content_box">
           <DeviceInfo
+            v-for="(item,index) in markers"
+            :key="index"
+            :data="item"
             @show-cur-polyline="requestCurTracks"
             @show-polyline="addPolyLine"
             @show-positin="showMarkerPositin"
-            :data="item"
-            v-for="(item,index) in markers"
-            :key="index"
-          ></DeviceInfo>
+          />
         </div>
       </div>
       <div class="bottom_content_box">
         <div class="wran_title">报警列表</div>
         <div class="warn_box">
-          <DeviceInfo :data="item" v-for="(item,index) in markers" :key="index"></DeviceInfo>
+          <DeviceInfo v-for="(item,index) in markers" :key="index" :data="item" />
         </div>
       </div>
     </div>
@@ -94,7 +94,7 @@ interface IMarkerParams {
   components: { DeviceInfo }
 })
 export default class extends Vue {
-  private timer:any = 0 // 定时器
+  private timer: any = 0 // 定时器
   private lineState: string = '在线'
   private options: any[] = [
     {
@@ -141,6 +141,8 @@ export default class extends Vue {
       console.log(res)
     })
 
+    this.requestMarkerData(this.markerParams)
+
     // const style = [
     //   {
     //     url: '../../assets/images/help_logo.png',
@@ -177,7 +179,7 @@ export default class extends Vue {
     // })
   }
 
-  beforeDestroy(){
+  beforeDestroy() {
     clearTimeout(this.timer)
   }
 
@@ -316,7 +318,7 @@ export default class extends Vue {
   }
 
   /**
-   * @message: 请求设备坐标点
+   * @message: 递归请求请求设备坐标点
    * @parameter:
    * @Return:
    * @Date: 2019-09-30 18:58:06
@@ -330,7 +332,7 @@ export default class extends Vue {
     }
     this.timer = setTimeout(() => {
       this.requestMarkerData(this.markerParams)
-    }, 5000)
+    }, 1000)
     this.drawMarker(dataList)
   }
 
@@ -350,11 +352,6 @@ export default class extends Vue {
       })
     })
   }
-
-
-  
-
-  
 
   /**
    * @message: 绘制坐地点
