@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:39:44
- * @LastEditTime: 2019-10-10 22:34:00
+ * @LastEditTime: 2019-10-19 12:14:24
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -13,16 +13,6 @@
         <div class="left_box">
           <div class="title">
             <h2>设备列表</h2>
-          </div>
-          <div class="selected_box">
-            <!-- <el-select v-model="value1" placeholder="请选择" @change="onSelectChange1">
-              <el-option
-                v-for="item in options1"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>-->
           </div>
         </div>
         <div class="search_input_box">
@@ -38,9 +28,7 @@
           <el-button type="primary" @click="onAddDevice()">添加设备</el-button>
         </div>
       </div>
-  
 
-  
       <!-- 表单 -->
       <el-table
         ref="table"
@@ -59,11 +47,7 @@
         <el-table-column align="center" prop="update_time" label="更新时间" />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <router-link
-              :to="{path: '/school_options/radar_detail', query: {schoolId: scope.row.school_id}}"
-            >
-              <el-button class="btn_m" type="primary" size="mini">编辑</el-button>
-            </router-link>
+            <el-button class="btn_m" type="primary" size="mini" @click="onOpenEdit">编辑</el-button>
             <el-button class="btn_m" type="danger" size="mini" @click="onOpen">删除</el-button>
           </template>
         </el-table-column>
@@ -75,15 +59,50 @@
           layout="prev, pager, next, jumper"
           :page-size="20"
           :total="totalPage"
-          @current-change="onCurrentChange"
-        />
+          @current-change="onCurrentChange" />
       </div>
     </template>
+
+    <!-- 添加设备 -->
     <el-dialog title="添加设备" :visible.sync="dialogVisible" width="60%">
-      <span>这是一段信息</span>
+      <el-form :model="form">
+        <el-form-item label="设备名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="自动定位时间" :label-width="formLabelWidth">
+          <el-input v-model="form.automatic_positioning_time" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="休眠时段" :label-width="formLabelWidth">
+          <el-input v-model="form.gps_sleep_time" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="深度休眠" :label-width="formLabelWidth">
+          <el-input v-model="form.deep_sleep" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 编辑设备 -->
+    <el-dialog title="编辑设备" :visible.sync="dialogVisible2" width="60%">
+      <el-form :model="form">
+        <el-form-item label="设备名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="自动定位时间" :label-width="formLabelWidth">
+          <el-input v-model="form.automatic_positioning_time" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="休眠时段" :label-width="formLabelWidth">
+          <el-input v-model="form.gps_sleep_time" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="深度休眠" :label-width="formLabelWidth">
+          <el-input v-model="form.deep_sleep" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -116,16 +135,11 @@ interface ISelectItem {
   name: 'schoolRadar'
 })
 export default class extends Vue {
-  private input2: string = ''
-  private dialogVisible:boolean = false
+  private dialogVisible: boolean = false
+  private dialogVisible2: boolean = false
   private tableData: any[] = dataList
-
   private currentPage: number = 0
-  private options1: any[] = []
-  private value1: string = ''
-
   private totalPage: number = 0
-  private date: string = ''
   private loading: boolean = false
   private tableHeight = '500px'
   private redarParams: IReadarParams = {
@@ -135,6 +149,10 @@ export default class extends Vue {
     keyword: '',
     page: 1,
     per_page: 20
+  }
+  private formLabelWidth = '120px'
+  private form = {
+    name: ''
   }
 
   created() {
@@ -199,18 +217,6 @@ export default class extends Vue {
   private onCurrentChange(e: any): void {
     console.log('onCurrentChange e: ', e)
     this.redarParams.page = e
-    this.requetRedarData(this.redarParams)
-  }
-
-  // 季度 select
-  private onSelectChange1(e: any): void {
-    const selectValue = JSON.parse(e)
-    this.redarParams.year = selectValue.year
-    this.redarParams.term = selectValue.term_id
-    this.redarParams.term = selectValue.term_id
-    this.redarParams.page = 1
-    this.currentPage = 0
-    this.redarParams.keyword = ''
     this.requetRedarData(this.redarParams)
   }
 

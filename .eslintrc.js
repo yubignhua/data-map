@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-08-22 15:26:13
+ * @LastEditTime: 2019-08-22 15:26:13
+ * @LastEditors: your name
+ */
 module.exports = {
   root: true,
   env: {
@@ -27,7 +34,19 @@ module.exports = {
     'vue/eqeqeq': 'error',
     'vue/key-spacing': 'error',
     'vue/match-component-file-name': 'error',
-    'vue/object-curly-spacing': 'error'
+    'vue/object-curly-spacing': 'error',
+    'vue/html-closing-bracket-newline': ["error", {
+      "singleline": "never",
+      "multiline": "never"
+    }],
+    'vue/max-attributes-per-line': ["error", {
+      "singleline": 100,
+      "multiline": {
+        "max": 1,
+      }
+    }],
+    "vue/singleline-html-element-content-newline": 0,
+    "vue/html-self-closing": 0
   },
   'extends': [
     'eslint:recommended',
