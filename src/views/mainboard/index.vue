@@ -2,16 +2,25 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-11 22:09:40
+ * @LastEditTime: 2019-10-27 21:03:48
  * @LastEditors: Please set LastEditors
  -->
 <template>
   <div class="main-map-container">
     <div class="app-container">
+      <div class="top_img">
+        <img src="@/assets/images/bg_top.jpg" alt />
+        <div class="top_text">智慧救援系统</div>
+      </div>
+      <img class="border_right_top bg_border" src="@/assets/images/border_06.png" alt />
+      <img class="border_right_bottom bg_border" src="@/assets/images/border_07.png" alt />
+      <img class="border_left_top bg_border" src="@/assets/images/border_05.png" alt />
+      <img class="border_left_bottom bg_border" src="@/assets/images/border_03.png" alt />
       <div id="container" />
       <div class="main_bottom">
         <div class="left">
-          <svg-icon name="icon_sos" width="50" height="50" />
+          <!-- <svg-icon name="icon_sos" width="50" height="50" /> -->
+          <img src="@/assets/images/helicoper.png" width="100" height="50" alt />
         </div>
         <div class="right">
           <div>日客则地区一号救援</div>
@@ -21,13 +30,20 @@
     </div>
     <div class="app_right_bar">
       <div class="top_content_box">
-        <div class="app_right_title">用户列表</div>
+        <img class="border_right_top bg_border" src="@/assets/images/border_06.png" alt />
+        <img class="border_right_bottom bg_border" src="@/assets/images/border_07.png" alt />
+        <img class="border_left_top bg_border" src="@/assets/images/border_05.png" alt />
+        <img class="border_left_bottom bg_border" src="@/assets/images/border_03.png" alt />
+        <div class="app_right_title">
+          <img src="@/assets/images/border_08.png" alt />
+          用户列表
+        </div>
         <div class="search_box section">
           <el-input
             v-model="keyword"
             size="mini"
             class="search_btn"
-            placeholder="请输入内容"
+            placeholder="请输入设备名称,IMEI或ICCID"
             prefix-icon="el-icon-search"
             clearable
             @keyup.enter.native="onSearch"
@@ -35,8 +51,8 @@
           <el-button size="mini" type="primary" plain @click="onSearch">搜索</el-button>
         </div>
         <div class="device_group section">
+          <div style="margin-right:10px">设备分组:</div>
           <el-select v-model="groupValue" size="mini" placeholder="设备分组">
-            <template slot="prepend">Http://</template>
             <el-option
               v-for="item in options"
               :key="item.groupValue"
@@ -64,7 +80,10 @@
         </div>
       </div>
       <div class="bottom_content_box">
-        <div class="wran_title">报警列表</div>
+        <div class="wran_title">
+          <img src="@/assets/images/border_08.png" alt />
+          报警列表
+        </div>
         <div class="warn_box">
           <DeviceInfo v-for="(item,index) in markers" :key="index" :data="item" />
         </div>
@@ -490,33 +509,122 @@ export default class extends Vue {
 .el-radio-button--medium .el-radio-button__inner {
   padding: 5px 20px;
 }
+.el-input--mini .el-input__inner {
+  background: #32667c;
+  border: none;
+}
+.el-radio-group {
+  width: 100%;
+}
+.el-radio-button {
+  width: 33.33%;
+}
+.el-radio-button__inner {
+  width: 100%;
+}
+.el-button-group {
+  width: 100%;
+}
+.el-button--default.el-button--mini {
+  background: #025172;
+  border-color: #025172;
+  color: #a6d5d9;
+  width: 33.33%;
+}
+.el-button-group > .el-button:not(:first-child):not(:last-child) {
+  border-left: solid 1px #01415c;
+}
+.el-button-group > .el-button:last-child {
+  border-left: solid 1px #01415c;
+}
+.el-radio-button--medium .el-radio-button__inner {
+  background: #025172;
+  border: none;
+  color: #a6d5d9;
+}
+.el-radio-button__orig-radio:checked + .el-radio-button__inner {
+  background: #a6d5db;
+  color: #40a8ac;
+}
 </style>
 <style lang="scss" scoped>
 .main-map-container {
   min-height: 100%;
-  background-color: #ffffff;
+  background-color: #011236;
   display: flex;
 
+  .el-button--primary.is-plain {
+    background: #009b9b;
+    border: none;
+    color: white;
+  }
+
+  .bg_border {
+    position: absolute;
+  }
+  .border_right_top {
+    top: 40px;
+    right: 0;
+  }
+  .border_right_bottom {
+    right: 0;
+    bottom: 120px;
+  }
+  .border_left_top {
+    top: 40px;
+    left: 0;
+  }
+  .border_left_bottom {
+    left: -25px;
+    bottom: 120px;
+  }
+
   .app-container {
+    padding: 20px 40px;
     min-height: 100%;
     display: flex;
     flex-direction: column;
     flex: 1;
+    margin-right: 80px;
     padding-bottom: 10px;
+    position: relative;
+
+    .top_img {
+      text-align: center;
+      margin-bottom: 10px;
+      position: relative;
+      .top_text {
+        width: 900px;
+        text-align: center;
+        @include center;
+        font-size: 18px;
+        color: #ffffff;
+        margin-left: 40px;
+        font-weight: 600;
+      }
+      img {
+        width: 900px;
+      }
+    }
     #container {
       width: 100%;
       flex: 1;
+      border-radius: 15px;
+      border: solid 1px #006c83;
+      padding: 40px;
     }
     .main_bottom {
       width: 100%;
-      min-height: 100px;
-      background: #2e4155;
+      min-height: 112px;
+      background: #01405b;
       border-radius: 8px;
-      color: white;
+      color: #a6d5d9;
       font-size: 20px;
       font-weight: 600;
       display: flex;
       align-items: center;
+      border: solid 1px #006c83;
+      margin-top: 40px;
       .left {
         width: 150px;
         text-align: center;
@@ -527,22 +635,90 @@ export default class extends Vue {
     }
   }
   .app_right_bar {
-    width: 300px;
-    color: white;
+    width: 470px;
+    color: #01405b;
     position: relative;
-    margin-right: 15px;
+    right: 30px;
+    top: 15px;
+    .device_item {
+      cursor: pointer;
+      background: #01405b;
+      border-bottom: solid 1px #205e75;
+
+      margin: 5px;
+      font-size: 14px;
+      padding-bottom: 1px;
+      .device_name {
+        padding-top: 10px;
+      }
+      .position_info {
+      }
+      .device_info {
+        font-size: 12px;
+      }
+      .line_item {
+        margin: 8px;
+      }
+      .btn_group_box {
+        display: flex;
+        margin: 5px;
+        box-sizing: border-box;
+        border-radius: 18px;
+        text-align: center;
+        margin-bottom: 10px;
+        .btn {
+          flex: 1;
+          text-align: center;
+          color: #2e4155;
+          background: white;
+          height: 30px;
+          line-height: 30px;
+        }
+      }
+    }
     .top_content_box {
       border-radius: 16px;
-      background: #2e4155;
-      padding: 15px;
-      height: 70%;
+      background: #01405b;
+      padding: 0 30px;
+      height: 62%;
+      border: solid 1px #006c83;
       position: relative;
+      top: 50px;
+      .bg_border {
+        position: absolute;
+      }
+      .border_right_top {
+        top: -25px;
+        right: -30px;
+      }
+      .border_right_bottom {
+        right: -30px;
+        bottom: -30px;
+      }
+      .border_left_top {
+        top: -25px;
+        left: -30px;
+      }
+      .border_left_bottom {
+        left: -55px;
+        bottom: -30px;
+      }
+      // top: 55px;
       .app_right_title {
         padding: 20px;
-        color: white;
+        padding-top: 10px;
+        color: #00f5fd;
         font-size: 18px;
         font-weight: 600;
         text-align: center;
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        img {
+          @include center;
+          width: 100%;
+          margin-top: 15px;
+        }
       }
       .section {
         margin-bottom: 10px;
@@ -554,7 +730,9 @@ export default class extends Vue {
         }
       }
       .device_group {
-        // display: flex;
+        display: flex;
+        color: #a6d5d9;
+        font-size: 14px;
         align-items: center;
         margin-bottom: 20px;
       }
@@ -562,9 +740,7 @@ export default class extends Vue {
         text-align: center;
       }
       .content_box {
-        background: white;
         border-radius: 8px;
-        background: white;
         border-radius: 8px;
         position: absolute;
         top: 210px;
@@ -573,106 +749,60 @@ export default class extends Vue {
         width: 90%;
         overflow-y: scroll;
         scrollbar-arrow-color: #ffffff;
-        .device_item {
-          cursor: pointer;
-          background: #2e4155;
-          margin: 5px;
-          font-size: 12px;
-          border-radius: 5px;
-          padding-bottom: 1px;
-          .device_name {
-            padding-top: 10px;
-          }
-          .position_info {
-          }
-          .device_info {
-            font-size: 10px;
-          }
-          .line_item {
-            margin: 8px;
-          }
-          .btn_group_box {
-            display: flex;
-            margin: 5px;
-            box-sizing: border-box;
-            border-radius: 18px;
-            text-align: center;
-            margin-bottom: 10px;
-            .btn {
-              flex: 1;
-              text-align: center;
-              color: #2e4155;
-              background: white;
-              height: 30px;
-              line-height: 30px;
-            }
-          }
-        }
       }
     }
     .bottom_content_box {
       position: absolute;
-      bottom: 0;
-      height: 28%;
-      background: #2e4155;
-      padding: 15px;
-      width: 100%;
+      bottom: 10px;
+      height: 25%;
+      padding: 30px;
+      box-sizing: border-box;
+      width: 470px;
       border-radius: 16px;
       margin-bottom: 10px;
-      .wran_title {
-        padding: 3px;
-        color: white;
+      border: solid 1px #006c83;
+      margin-right: 15px;
+      background: #01405b;
+      padding-top: 10px;
+      .app_right_title {
+        padding: 20px;
+        padding-top: 10px;
+        color: #00f5fd;
         font-size: 18px;
         font-weight: 600;
         text-align: center;
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        img {
+          @include center;
+          width: 100%;
+          margin-top: 15px;
+        }
+      }
+
+      .wran_title {
+        padding: 3px;
+        color: #00f5fd;
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+        position: relative;
+        img {
+          @include center;
+          width: 100%;
+          margin-top: 15px;
+        }
       }
       .warn_box {
-        background: white;
-        border-radius: 8px;
-        background: white;
+        background: #01405b;
         border-radius: 8px;
         position: absolute;
         top: 50px;
-        margin-right: 20px;
         bottom: 10px;
         width: 90%;
         overflow-y: scroll;
         scrollbar-arrow-color: #ffffff;
-        .device_item {
-          cursor: pointer;
-          background: #2e4155;
-          margin: 5px;
-          font-size: 12px;
-          border-radius: 5px;
-          padding-bottom: 1px;
-          .device_name {
-            padding-top: 10px;
-          }
-          .position_info {
-          }
-          .device_info {
-            font-size: 10px;
-          }
-          .line_item {
-            margin: 8px;
-          }
-          .btn_group_box {
-            display: flex;
-            margin: 5px;
-            box-sizing: border-box;
-            border-radius: 18px;
-            text-align: center;
-            margin-bottom: 10px;
-            .btn {
-              flex: 1;
-              text-align: center;
-              color: #2e4155;
-              background: white;
-              height: 30px;
-              line-height: 30px;
-            }
-          }
-        }
       }
     }
   }

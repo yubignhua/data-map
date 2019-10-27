@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-08-22 15:26:13
+ * @LastEditTime: 2019-08-22 15:26:13
+ * @LastEditors: your name
+ -->
 <template>
   <div
     :class="classObj"
@@ -79,6 +86,7 @@ export default class extends mixins(ResizeMixin) {
   z-index: 9;
   width: calc(100% - #{$sideBarWidth});
   transition: width 0.28s;
+  border-bottom: solid 1px #044255;
 }
 
 .sidebar-container {

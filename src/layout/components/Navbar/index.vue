@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-10-02 22:16:06
+ * @LastEditTime: 2019-10-02 22:16:06
+ * @LastEditors: your name
+ -->
 <template>
   <div class="navbar">
     <hamburger
@@ -101,7 +108,7 @@ export default class extends Vue {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background: #011236;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {

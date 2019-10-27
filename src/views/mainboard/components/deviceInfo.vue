@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-03 14:12:01
- * @LastEditTime: 2019-10-03 14:12:01
- * @LastEditors: your name
+ * @LastEditTime: 2019-10-27 17:36:17
+ * @LastEditors: Please set LastEditors
  -->
 <template>
   <div class="device_item">
@@ -82,6 +82,7 @@ export default class extends Vue {
   }
   .line_item {
     margin: 8px;
+    color: #a6d5d9;
   }
   .btn_group_box {
     display: flex;
