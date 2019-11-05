@@ -4,8 +4,7 @@
       :src="src"
       scrolling="auto"
       frameborder="0"
-      class="frame"
-    />
+      class="frame" />
   </div>
 </template>
 

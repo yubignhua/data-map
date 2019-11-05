@@ -2,24 +2,27 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-03 14:12:01
- * @LastEditTime: 2019-10-27 17:36:17
+ * @LastEditTime: 2019-11-04 23:05:08
  * @LastEditors: Please set LastEditors
  -->
 <template>
   <div class="device_item">
     <div class="device_name line_item">
-      {{data.device_name}}
-      <div class="set_positon" @click="showPositin(data.position)">
+      {{ data.device_name }} ({{ data.imei }})
+      <div class="set_positon" @click="showPositin([data.lng, data.lat])">
         <svg-icon name="定位" width="20" height="20" />
       </div>
     </div>
-    <div class="position_info line_item">{{data.address}}</div>
+    <div class="position_info line_item">
+      <div class="address">{{ data.address }}</div>
+    </div>
     <div
-      class="device_info line_item"
-    >( · |电量:{{data.electric}}|信号:{{data.signal}}|更新时间:{{data.update_time}} )</div>
+      class="device_info line_item">
+      ( · |电量:{{ data.electricity }}%|信号:{{ data.signal_new }}%|更新时间:{{ data.dataTime }} )
+    </div>
     <div class="btn_group_box">
       <el-button-group>
-        <el-button size="mini" @click="showCurPolyline">实时追踪</el-button>
+        <el-button size="mini" @click="showCurPolyline(data.imei)">实时追踪</el-button>
         <el-button size="mini" @click="showPolyline(data.device_name)">历史轨迹</el-button>
         <el-button size="mini">设备设置</el-button>
       </el-button-group>
@@ -38,7 +41,7 @@ export default class extends Vue {
 
   @Watch('data', { immediate: true })
   private onMarkersListChange(newData: any) {
-    console.log('markers', newData)
+    // console.log('markers', newData)
     this.data = newData
   }
 
@@ -72,8 +75,7 @@ export default class extends Vue {
       padding: 5px;
       right: 10px;
       top: 5px;
-       cursor: pointer;
-
+      cursor: pointer;
     }
   }
 
@@ -83,6 +85,9 @@ export default class extends Vue {
   .line_item {
     margin: 8px;
     color: #a6d5d9;
+    .address{
+      width:80%;
+    }
   }
   .btn_group_box {
     display: flex;

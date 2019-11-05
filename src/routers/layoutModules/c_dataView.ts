@@ -17,17 +17,16 @@ export default [
       icon: 'dashboard'
     },
     children: [
-        {
-            path: 'dts_rank',
-            component: () => import(/* webpackChunkName: "dtsRank" */ '@/views/schoolOperationSection/dtsRank/index.vue'),
-            meta: {
-              title: '数据统计',
-              keepAlive: true,
-              type: 'school_rank',
-              icon: 'example'
-            }
-          }
+      {
+        path: 'dts_rank',
+        component: () => import(/* webpackChunkName: "dtsRank" */ '@/views/schoolOperationSection/dtsRank/index.vue'),
+        meta: {
+          title: '数据统计',
+          keepAlive: true,
+          type: 'school_rank',
+          icon: 'example'
+        }
+      }
     ]
   }
 ]
-

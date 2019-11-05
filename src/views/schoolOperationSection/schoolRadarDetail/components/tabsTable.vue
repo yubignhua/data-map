@@ -2,14 +2,12 @@
   <div class="tabs_table_box">
     <el-tabs
       v-model="editableTabsValue"
-      type="card"
-    >
+      type="card">
       <el-tab-pane
         v-for="(item, index) in editableTabs"
         :key="index"
         :label="item.year+''"
-        :name="item.year+''"
-      >
+        :name="item.year+''">
         <slot :row="item.rows" />
       </el-tab-pane>
     </el-tabs>

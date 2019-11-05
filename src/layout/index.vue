@@ -8,13 +8,11 @@
 <template>
   <div
     :class="classObj"
-    class="app-wrapper"
-  >
+    class="app-wrapper">
     <div
       v-if="classObj.mobile && sidebar.opened"
       class="drawer-bg"
-      @click="handleClickOutside"
-    />
+      @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div class="main-container">
       <navbar class="fixed-header" />

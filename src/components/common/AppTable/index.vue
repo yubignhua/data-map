@@ -15,15 +15,13 @@
       <el-table
         v-loading="loading"
         :data="tableData"
-        :show-header="showHeader"
-      >
+        :show-header="showHeader">
         <el-table-column
           v-if="showIndex"
           align="center"
           label="序号"
           type="index"
-          show-overflow-tooltip
-        />
+          show-overflow-tooltip />
         <el-table-column
           v-for="(column, index) in columns"
           :key="index"
@@ -32,27 +30,23 @@
           :width="column.width"
           :formatter="column.formatter"
           :align="column.align ? column.align : 'center'"
-          show-overflow-tooltip
-        >
+          show-overflow-tooltip>
           <template
-            slot-scope="{row, $index}"
-          >
+            slot-scope="{row, $index}">
             <!-- 格式化行 -->
 
             <!-- 链接行 -->
             <router-link
               v-if="column.routLink"
               class="link-color"
-              :to="column.routLink(row, column, row[column.prop], $index)"
-            >
+              :to="column.routLink(row, column, row[column.prop], $index)">
               {{ column.formatter ? column.formatter(row, column, row[column.prop], $index) : (row[column.prop] ? row[column.prop] : column.defaultProp ? column.defaultProp : row[column.prop]) }}
             </router-link>
             <a
               v-else-if="column.link"
               class="link-color"
               target="__blank"
-              :href="column.link(row, column, row[column.prop], $index)"
-            >
+              :href="column.link(row, column, row[column.prop], $index)">
               {{ row[column.prop] ? row[column.prop] : column.defaultProp ? column.defaultProp : row[column.prop] }}
             </a>
             <!-- 自定义行 -->
@@ -62,8 +56,7 @@
               :column="column"
               :row="row"
               :type="column.type"
-              :value="column.formatter ? column.formatter(row, column, row[column.prop], $index) : row[column.prop]"
-            />
+              :value="column.formatter ? column.formatter(row, column, row[column.prop], $index) : row[column.prop]" />
             <span v-else-if="column.formatter">
               {{ column.formatter(row, column, row[column.prop], $index) }}
             </span>
@@ -76,13 +69,11 @@
           align="center"
           fixed="right"
           label="操作"
-          :width="optionWidth"
-        >
+          :width="optionWidth">
           <template slot-scope="scope">
             <slot
               name="operate"
-              :operate="scope.row"
-            />
+              :operate="scope.row" />
           </template>
         </el-table-column>
       </el-table>
@@ -91,15 +82,13 @@
     <div
       v-if="pagenation && pagenation.total > 0"
       class="pagenation-con"
-      style="margin-top: 10px;text-align: right;"
-    >
+      style="margin-top: 10px;text-align: right;">
       <el-pagination
         :current-page.sync="pagenation.page"
         :page-size="pagenation.per_page"
         layout="total, prev, pager, next"
         :total="pagenation.total"
-        @current-change="handleCurrentChange"
-      />
+        @current-change="handleCurrentChange" />
     </div>
 
     <div class="foot-con">

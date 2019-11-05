@@ -5,23 +5,19 @@
         <img
           class="pic-404__parent"
           :src="img_404"
-          alt="404"
-        >
+          alt="404">
         <img
           class="pic-404__child left"
           :src="img_404_cloud"
-          alt="404"
-        >
+          alt="404">
         <img
           class="pic-404__child mid"
           :src="img_404_cloud"
-          alt="404"
-        >
+          alt="404">
         <img
           class="pic-404__child right"
           :src="img_404_cloud"
-          alt="404"
-        >
+          alt="404">
       </div>
       <div class="bullshit">
         <div class="bullshit__oops">
@@ -35,8 +31,7 @@
         </div>
         <a
           href="/ms-data/mainboard/mainboard"
-          class="bullshit__return-home"
-        >返回首页</a>
+          class="bullshit__return-home">返回首页</a>
       </div>
     </div>
   </div>

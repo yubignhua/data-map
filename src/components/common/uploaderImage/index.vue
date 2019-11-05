@@ -3,50 +3,41 @@
     <el-progress
       v-if="isUploading"
       type="circle"
-      :percentage="uploadProgress"
-    />
+      :percentage="uploadProgress" />
     <div
       v-else
       class="images__item__wrap img"
       @mouseover="showMask()"
-      @mouseout="hideMask()"
-    >
+      @mouseout="hideMask()">
       <div
         v-show="maskVisible"
-        class="images__item__edit"
-      >
+        class="images__item__edit">
         <i
           class="el-icon-zoom-in"
-          @click="enlarge()"
-        />
+          @click="enlarge()" />
         <i
           class="el-icon-delete"
-          @click="doDelete()"
-        />
+          @click="doDelete()" />
       </div>
       <img
         v-if="!addVisible"
         class="images__item"
-        :src="pictureUrl"
-      >
+        :src="pictureUrl">
       <div
         v-if="addVisible"
-        class="images__item__wrap upload"
-      >
+        class="images__item__wrap upload">
         <i class="el-icon-plus upload__wrap" />
         <input
           ref="inputRef"
           type="file"
           class="upload__input"
           accept=".png,.jpg"
-          @change="addImg"
-        >
+          @change="addImg">
       </div>
     </div>
     <el-dialog
       title="图片详情"
-      :visible.sync="dialogTableVisible"
-    >
+      :visible.sync="dialogTableVisible">
       <large-img :img-url="pictureUrl" />
     </el-dialog>
   </div>

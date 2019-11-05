@@ -11,17 +11,14 @@
       id="hamburger-container"
       :is-active="sidebar.opened"
       class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
+      @toggleClick="toggleSideBar" />
     <breadcrumb
       id="breadcrumb-container"
-      class="breadcrumb-container"
-    />
+      class="breadcrumb-container" />
     <div class="right-menu">
       <el-dropdown
         class="avatar-container right-menu-item hover-effect"
-        trigger="click"
-      >
+        trigger="click">
         <span class="el-dropdown-link">
           {{ userName }}
           <i class="el-icon-caret-bottom" />
@@ -30,8 +27,7 @@
           <el-dropdown-item>
             <span
               style="display:block;"
-              @click="logout"
-            >退出登录</span>
+              @click="logout">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

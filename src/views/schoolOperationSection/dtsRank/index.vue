@@ -28,7 +28,6 @@ interface IRes extends IResponseData {
 
 @Component
 export default class PieChart extends Vue {
-
   private className: string = 'chart'
   private width: string = '100%'
   private height: string = '400px'
@@ -40,7 +39,7 @@ export default class PieChart extends Vue {
       dataList: [],
       home: 'asdf',
       type: 1,
-      getData(){}
+      getData() {}
     }
   }
 
@@ -59,21 +58,20 @@ export default class PieChart extends Vue {
     this.chart = null
   }
 
-   /**
+  /**
    * @message: 获取数据
-   * @params: 
-   * @Return: 
+   * @params:
+   * @Return:
    */
-  private async getData():Promise<any>{
+  private async getData():Promise<any> {
     const resData = await getAllUser<IRes>()
-    console.log('resData: ', resData);
-
+    console.log('resData: ', resData)
   }
 
   /**
    * @message: 监听窗口调整大小
-   * @params: 
-   * @Return: 
+   * @params:
+   * @Return:
    */
   private resizeHandler = debounce(() => {
     if (this.chart) {
@@ -83,8 +81,8 @@ export default class PieChart extends Vue {
 
   /**
    * @message: 初始化 echart
-   * @params: 
-   * @Return: 
+   * @params:
+   * @Return:
    */
   private initChart() {
     this.chart = echarts.init(this.$el as any, 'macarons')

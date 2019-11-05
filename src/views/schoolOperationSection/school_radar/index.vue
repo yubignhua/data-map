@@ -22,8 +22,7 @@
             prefix-icon="el-icon-search"
             clearable
             @change="onInputChange"
-            @keyup.enter.native="onSearch"
-          />
+            @keyup.enter.native="onSearch" />
           <el-button type="defalut" @click="onSearch">查询</el-button>
           <el-button type="primary" @click="onAddDevice()">添加设备</el-button>
         </div>
@@ -35,8 +34,7 @@
         v-loading="loading"
         :height="tableHeight"
         :data="tableData"
-        style="width: 100%"
-      >
+        style="width: 100%">
         <el-table-column align="center" prop="device_name" label="设备名称" />
         <el-table-column align="center" prop="imei" label="设备码" />
         <el-table-column align="center" prop="address" label="设备所在地址" />
@@ -185,7 +183,7 @@ export default class extends Vue {
     this.totalPage = total
     this.date = date
     this.$nextTick(() => {
-      ;(this.$refs.table as any).bodyWrapper.scrollTop = 0
+      (this.$refs.table as any).bodyWrapper.scrollTop = 0
     })
   }
 

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-10-27 21:03:48
+ * @LastEditTime: 2019-11-04 23:51:33
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -91,11 +91,18 @@
     </div>
   </div>
 </template>
-
+showPositin
 <script lang="ts">
 import { getIndexData } from '@/services/dtsRank/index'
 import { Component, Vue } from 'vue-property-decorator'
-import { getAllUser } from '@/services/dataMap/index'
+import {
+  getAllUser,
+  getTracksData,
+  getTimeTracks,
+  getDeviceTracks,
+  getWarnDeviceMarkers,
+  getDeviceMarkerList
+} from '@/services/dataMap/index'
 import R from '@/utils/freePiont'
 import { dataList, massMarkes } from './data'
 import DeviceInfo from '@/views/mainboard/components/deviceInfo.vue'
@@ -140,13 +147,13 @@ export default class extends Vue {
     ['119.387271', '35.912501'],
     ['119.398258', '35.904600']
   ]
-  private markers: any[] = this.createRealMarkerDate(dataList)
+  private markers: any[] = []
   private markerParams: IMarkerParams = {
     page: 1,
-    perpage: 20,
-    group: '',
-    state: 1,
-    keyword: ''
+    perpage: 20
+    // group: '',
+    // state: 1,
+    // keyword: ''
   }
 
   mounted() {
@@ -155,53 +162,108 @@ export default class extends Vue {
       // 地图图块加载完成后触发
       console.log('地图加载完成')
     })
-    this.drawMarker(this.markers)
-    getAllUser().then(res => {
-      console.log(res)
-    })
-
     this.requestMarkerData(this.markerParams)
+    // this.requestCurTracks(363620190320867)
 
     // const style = [
-    //   {
-    //     url: '../../assets/images/help_logo.png',
-    //     anchor: new AMap.Pixel(6, 6),
-    //     size: new AMap.Size(8, 8)
-    //   },
-    //   {
-    //     url: '../../assets/images/help_logo.png',
-    //     anchor: new AMap.Pixel(3, 3),
-    //     size: new AMap.Size(8, 8)
-    //   },
-    //   {
-    //     url: '../../assets/images/help_logo.png',
-    //     anchor: new AMap.Pixel(4, 4),
-    //     size: new AMap.Size(8, 8)
-    //   }
-    // ]
+    //     {
+    //       url: '../../assets/images/help_logo.png',
+    //       anchor: new AMap.Pixel(6, 6),
+    //       size: new AMap.Size(8, 8)
+    //     },
+    //     {
+    //       url: '../../assets/images/help_logo.png',
+    //       anchor: new AMap.Pixel(3, 3),
+    //       size: new AMap.Size(8, 8)
+    //     },
+    //     {
+    //       url: '../../assets/images/help_logo.png',
+    //       anchor: new AMap.Pixel(4, 4),
+    //       size: new AMap.Size(8, 8)
+    //     }
+    //   ]
 
-    // var mass = new AMap.MassMarks({
-    //   opacity: 0.8,
-    //   zIndex: 111,
-    //   cursor: 'pointer',
-    //   style: style
-    // })
+    //   var mass = new AMap.MassMarks({
+    //     opacity: 0.8,
+    //     zIndex: 111,
+    //     cursor: 'pointer',
+    //     style: style
+    //   })
 
-    // mass.setData(massMarkes);
+    //   mass.setData(massMarkes);
 
-    // mass.setMap(this.map)
+    //   mass.setMap(this.map)
 
-    // var styleObject = new AMap.StyleObject({
-    //   url: '//vdata.amap.com/icons/b18/1/2.png', // 图标地址
-    //   size: new AMap.Size(11, 11), // 图标大小
-    //   anchor: new AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
-    // })
+    //   var styleObject = new AMap.StyleObject({
+    //     url: '//vdata.amap.com/icons/b18/1/2.png', // 图标地址
+    //     size: new AMap.Size(11, 11), // 图标大小
+    //     anchor: new AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
+    //   })
   }
 
   beforeDestroy() {
     clearTimeout(this.timer)
   }
 
+  /**
+   * @message: 获取历史轨迹
+   * @parameter:
+   * @Return:
+   * @Date: 2019-11-03 18:33:52
+   */
+  private async requestHistoryTrack(imei: number): Promise<any> {
+    const resData = await getDeviceTracks<IResponseData>(imei)
+    const { status_code, data, message } = resData
+    if (+status_code !== 200) {
+      return this.$elementMessage(message || '轨迹信息获取失败')
+    }
+    console.log('requestHistoryTrack:::', data)
+  }
+
+  /**
+   * @message: 请求当前轨迹坐标
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-30 18:58:06
+   */
+  private async requestCurTracks(id: number) {
+    console.log('id: ', id)
+    const resData = await getTimeTracks<IResponseData>(id)
+    const { status_code, data, message } = resData
+    console.log('data: ', data)
+    if (+status_code !== 200) {
+      return this.$elementMessage(message || '轨迹信息获取失败')
+    }
+    this.removeAllOverlay()
+    const fn = R.pipe(this.getPolyLineData, this.addPolyLine)
+    fn(data)
+  }
+
+  /**
+   * @message: 递归请求请求设备坐标点列表
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-30 18:58:06
+   */
+  private async requestMarkerData(mData: IMarkerParams) {
+    const resData = await getDeviceMarkerList<IResponseData>(mData)
+    // console.log('resData: ', resData)
+    const {
+      status_code,
+      data: { list },
+      message
+    } = resData
+    console.log('resData: ', resData)
+    if (+status_code !== 200) {
+      clearTimeout(this.timer)
+      return this.$elementMessage(message || '轨迹信息获取失败')
+    }
+    this.drawMarker(list)
+    this.createRealMarkerDate(list)
+    this.timer = setTimeout(() => {
+      // this.requestMarkerData(this.markerParams)
+    }, 1000)
+  }
   /**
    * @message: 监听搜索按钮
    * @parameter:
@@ -230,17 +292,50 @@ export default class extends Vue {
    * @Return:
    * @Date: 2019-10-03 13:50:35
    */
-  private createRealMarkerDate(dataList: any[]) {
-    return dataList.map((item: any) => {
-      const iconMap: any = {
-        0: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png',
-        1: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
-      }
-      const content = `<div class="custom-content-marker"><img src="${
-        iconMap[item.type]
-      }"></div>`
-      item.content = content
-      return item
+  private async createRealMarkerDate(dataList: any[]) {
+    const madta = await Promise.all(
+      dataList.map((item: any) => {
+        return this.getAddAddressMark(item)
+      })
+    )
+    // console.log('madta==', madta)
+    this.markers = madta
+  }
+
+  private getAddAddressMark(item: any) {
+    const { lng, lat } = item
+    return new Promise((resolve, reject) => {
+      AMap.service('AMap.Geocoder', function() {
+        const iconMap: any = {
+          1: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png',
+          2: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
+        }
+        const content = `<div class="custom-content-marker"><img src="${
+          iconMap[item.dataType]
+        }"></div>`
+        item.content = content
+        // 回调函数
+        // 实例化Geocoder
+        const geocoder = new AMap.Geocoder({
+          city: '' // 城市，默认：“全国”
+        })
+        const lnglatXY = [lng, lat] // 地图上所标点的坐标
+        let address = ''
+        geocoder.getAddress(lnglatXY, function(status: any, result: any) {
+          if (status === 'complete' && result.info === 'OK') {
+            // console.log('result: ', result);
+            // 获得了有效的地址信息:
+            address = result.regeocode.formattedAddress
+            item.address = address
+            resolve(item)
+          } else {
+            // 获取地址失败
+            address = '获取失败'
+            item.address = address
+            reject(item)
+          }
+        })
+      })
     })
   }
 
@@ -311,48 +406,16 @@ export default class extends Vue {
    * @Date: 2019-10-02 14:35:51
    */
   showMarkerPositin(position: any[]) {
-    console.log('position: ', position)
     // this.map.setCenter([116.305467, 39.807761]) // 设置中心点
     this.handleConverGps(position).then((res: any) => {
       const marker = new AMap.Marker({
         position: [res.lng, res.lat]
       })
+      // 将坐标点设置为可视区域
       this.map.setFitView([marker])
-      this.map.setZoom(15)
+      // 设置显示比例尺
+      // this.map.setZoom(15)
     })
-  }
-
-  /**
-   * @message: 请求当前轨迹坐标
-   * @parameter:
-   * @Return:
-   * @Date: 2019-09-30 18:58:06
-   */
-  private async requestCurTracks(id: number) {
-    const resData = await getTracksData(id)
-    const { ok, dataList, message } = resData
-    if (!ok) return this.$elementMessage(message || '轨迹信息获取失败')
-    this.removeAllOverlay()
-    this.addPolyLine(dataList)
-  }
-
-  /**
-   * @message: 递归请求请求设备坐标点
-   * @parameter:
-   * @Return:
-   * @Date: 2019-09-30 18:58:06
-   */
-  private async requestMarkerData(data: IMarkerParams) {
-    const resData = await getMarkerData(data)
-    const { ok, dataList, message } = resData
-    if (!ok) {
-      clearTimeout(this.timer)
-      return this.$elementMessage(message || '轨迹信息获取失败')
-    }
-    this.timer = setTimeout(() => {
-      this.requestMarkerData(this.markerParams)
-    }, 1000)
-    this.drawMarker(dataList)
   }
 
   /**
@@ -380,36 +443,41 @@ export default class extends Vue {
    */
   private drawMarker(markers: any[]) {
     markers.forEach(marker => {
-      const lnglats = this.handleConverGps([
-        marker.position[0],
-        marker.position[1]
-      ]).then((res: any) => {
-        const marke = new AMap.Marker({
-          map: this.map,
-          // icon: marker.icon,
-          content: marker.content,
-          position: [res.lng, res.lat],
-          // position: [marker.position[0], marker.position[1]],
-          offset: new AMap.Pixel(-13, -30)
-        })
-        // 设置点标记的动画效果，此处为弹跳效果
-        if (marker.type === 0) marke.setAnimation('AMAP_ANIMATION_BOUNCE')
-        // 实例化信息窗体
-        const title = `${marker.device_name}<span style="font-size:11px;color:#F00;">报警</span>`
-        const content: any[] = []
-        content.push(`地址：${marker.address}`)
-        content.push(`位置更新于：${marker.update_time}`)
-        content.push(
-          `设备信息: | 电量:${marker.electric} | 信号:${marker.signal} | 更新时间 ${marker.update_time}`
-        )
-        // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
-        // 鼠标点击marker弹出自定义的信息窗体
-        AMap.event.addListener(marke, 'click', () => {
-          const infoWindow = this.createInfoWindow(title, content)
-          infoWindow.open(this.map, marke.getPosition())
+      // console.log('marker======: ', marker)
+      const { lng, lat, imei } = marker
+      this.getMarkAdress(lng, lat).then(address => {
+        const lnglats = this.handleConverGps([lng, lat]).then((res: any) => {
+          const marke = new AMap.Marker({
+            map: this.map,
+            icon:
+              '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+            // content: marker.content,
+            position: [res.lng, res.lat],
+            offset: new AMap.Pixel(-13, -30)
+          })
+          // 设置点标记的动画效果，此处为弹跳效果
+          if (marker.type === 0) marke.setAnimation('AMAP_ANIMATION_BOUNCE')
+          // 实例化信息窗体
+          const title = `${marker.device_name}(${marker.imei})<span style="font-size:11px;color:#F00;">报警</span>`
+          const content: any[] = []
+          content.push(`地址：${address}`)
+          content.push(`位置更新于：${marker.dataTime}`)
+          content.push(
+            `设备信息: | 电量:${marker.electricity}% | 信号:${marker.signal_new}% | 更新时间 ${marker.dataTime}`
+          )
+          // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
+          // 鼠标点击marker弹出自定义的信息窗体
+          AMap.event.addListener(marke, 'click', () => {
+            const infoWindow = this.createInfoWindow(title, content)
+            infoWindow.open(this.map, marke.getPosition())
+          })
         })
       })
     })
+  }
+
+  private getPolyLineData(dataList:any) {
+    return dataList && dataList.map((item: any) => [item.lng, item.lat])
   }
 
   /**
@@ -419,8 +487,8 @@ export default class extends Vue {
    * @Date: 2019-09-30 17:26:22
    */
   private addPolyLine(testTrack: any[]) {
-    console.log('addPolyLine: ')
-    testTrack = this.testTrack
+    console.log('addPolyLine: ', testTrack)
+    // testTrack = this.testTrack
     const fn = R.pipe(
       this.hanleTrakData,
       this.createPolyLine
@@ -448,7 +516,7 @@ export default class extends Vue {
    */
   private initAMap() {
     const map = new AMap.Map('container', {
-      zoom: this.zoom,
+      zoom: this.zoom, // 地图显示的缩放级别
       center: this.center
     })
     AMap.plugin(
@@ -457,17 +525,138 @@ export default class extends Vue {
         // 异步同时加载多个插件
         const toolbar = new AMap.ToolBar()
         const scale = new AMap.Scale()
-        const geolocation = new AMap.Geolocation()
         const mapType = new AMap.MapType()
+        const geolocation = new AMap.Geolocation({
+          enableHighAccuracy: true, // 是否使用高精度定位，默认:true
+          timeout: 10000, // 超过10秒后停止定位，默认：无穷大
+          buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          zoomToAccuracy: true, // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+          buttonPosition: 'RB'
+        })
         map.addControl(toolbar)
         map.addControl(scale)
         map.addControl(geolocation)
         map.addControl(mapType)
+        this.getCurrentPosition(geolocation)
       }
     )
+    // 设置地图主题样式
     map.setMapStyle('amap://styles/whitesmoke')
     // map.setFeatures(['road','point']); // 多个种类要素显示
     return map
+  }
+
+  /**
+   * @message: 根据经纬度获取位置信息
+   * @parameter:
+   * @Return:
+   * @Date: 2019-11-03 19:19:33
+   */
+  private getMarkAdress(lng: number, lat: number) {
+    return new Promise((resolve, reject) => {
+      AMap.service('AMap.Geocoder', function() {
+        // 回调函数
+        // 实例化Geocoder
+        const geocoder = new AMap.Geocoder({
+          city: '' // 城市，默认：“全国”
+        })
+        const lnglatXY = [lng, lat] // 地图上所标点的坐标
+        // console.log('lnglatXY: ', lnglatXY)
+        let address = ''
+        geocoder.getAddress(lnglatXY, function(status: any, result: any) {
+          if (status === 'complete' && result.info === 'OK') {
+            // console.log('result: ', result);
+            // 获得了有效的地址信息:
+            address = result.regeocode.formattedAddress
+            resolve(address)
+          } else {
+            // 获取地址失败
+            address = '获取失败'
+            reject(address)
+          }
+        })
+      })
+    })
+  }
+
+  /**
+   * @message: 获取当前位置信息
+   * @parameter:
+   * @Return:
+   * @Date: 2019-11-03 17:55:00
+   */
+  private getCurrentPosition(geolocation: any) {
+    geolocation.getCurrentPosition()
+    AMap.event.addListener(geolocation, 'complete', this.onComplete) // 返回定位信息
+    AMap.event.addListener(geolocation, 'error', this.onError) // 返回定位出错信息
+  }
+
+  /**
+   * @message: 解析定位结果
+   * @parameter:
+   * @Return:
+   * @Date: 2019-11-03 17:34:33
+   */
+  private onComplete(data: any) {
+    console.log('data: ', data)
+    var str = ['定位成功']
+    str.push('经度：' + data.position.getLng())
+    str.push('纬度：' + data.position.getLat())
+    const lnglatXY = [data.position.getLng(), data.position.getLat()] // 已知点坐标
+    this.regeocoder(lnglatXY)
+    if (data.accuracy) {
+      str.push('精度：' + data.accuracy + ' 米')
+    } // 如为IP精确定位结果则没有精度信息
+    str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'))
+    console.log('---===位置信息', str.join('<br>'))
+    // document.getElementById('tip').innerHTML = str.join('<br>')
+  }
+
+  /**
+   * @message: 处理定位错误信息
+   * @parameter:
+   * @Return:
+   * @Date: 2019-11-03 17:34:49
+   */
+  private onError(data: any) {
+    console.log('定位失败: ', data)
+  }
+
+  /**
+   * @message: 逆地理编码
+   * @parameter:
+   * @Return:
+   * @Date: 2019-11-03 17:33:20
+   */
+  private regeocoder(loc: any) {
+    // 逆地理编码
+    var geocoder = new AMap.Geocoder({
+      radius: 1000,
+      extensions: 'all'
+    })
+    geocoder.getAddress(loc, (status: any, result: any) => {
+      if (status === 'complete' && result.info === 'OK') {
+        console.dir(result)
+        this.geocoder_CallBack(result)
+      }
+    })
+    var marker = new AMap.Marker({
+      // 加点
+      map: this.map,
+      position: loc
+    })
+    this.map.setFitView()
+  }
+  /**
+   * @message: 获取地址
+   * @parameter:
+   * @Return:
+   * @Date: 2019-11-03 18:30:22
+   */
+  private geocoder_CallBack(data: any) {
+    const address = data.regeocode.formattedAddress // 返回地址描述
+    console.log('address: ', address)
+    // document.getElementById('result').innerHTML = address
   }
 
   /**

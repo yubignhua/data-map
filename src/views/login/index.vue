@@ -6,8 +6,7 @@
       :rules="loginRules"
       class="login-form"
       autocomplete="on"
-      label-position="left"
-    >
+      label-position="left">
       <div class="title-container">
         <h3 class="title">
           未来魔法校商业智能平台
@@ -28,8 +27,7 @@
           name="mail"
           type="text"
           autocomplete="on"
-          placeholder="请输入邮箱地址"
-        />
+          placeholder="请输入邮箱地址" />
       </el-form-item>
 
       <el-form-item prop="password">
@@ -44,12 +42,10 @@
           placeholder="请输入密码"
           name="password"
           autocomplete="on"
-          @keyup.enter.native="handleLogin"
-        />
+          @keyup.enter.native="handleLogin" />
         <span
           class="show-pwd"
-          @click="showPwd"
-        >
+          @click="showPwd">
           <svg-icon :name="passwordType === 'password' ? 'eye-off' : 'eye-on'" />
         </span>
       </el-form-item>
@@ -58,8 +54,7 @@
         :loading="loading"
         type="primary"
         style="width:100%; margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >
+        @click.native.prevent="handleLogin">
         登录
       </el-button>
     </el-form>

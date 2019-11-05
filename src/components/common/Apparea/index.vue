@@ -4,40 +4,34 @@
       v-model="address.province"
       filterable
       placeholder="请选择省"
-      @change="selectCity"
-    >
+      @change="selectCity">
       <el-option
         v-for="item in provinceOptions"
         :key="item.id"
         :label="item.name"
-        :value="item.id"
-      />
+        :value="item.id" />
     </el-select>
     <el-select
       v-model="address.city"
       filterable
       placeholder="请选择市"
-      @change="selectArea"
-    >
+      @change="selectArea">
       <el-option
         v-for="item in cityOptions"
         :key="item.id"
         :label="item.name"
-        :value="item.id"
-      />
+        :value="item.id" />
     </el-select>
     <el-select
       v-model="address.area"
       filterable
       placeholder="请选择区"
-      @change="getAreaId"
-    >
+      @change="getAreaId">
       <el-option
         v-for="item in areaOptions"
         :key="item.id"
         :label="item.name"
-        :value="item.id"
-      />
+        :value="item.id" />
     </el-select>
   </div>
 </template>
