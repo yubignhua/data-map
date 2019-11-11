@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-04 17:10:48
- * @LastEditTime: 2019-11-03 18:40:11
+ * @LastEditTime: 2019-11-11 22:39:24
  * @LastEditors: Please set LastEditors
  */
 import request from '@/services/api'
@@ -25,8 +25,23 @@ interface IDeviceList {
   perpage: number,
 }
 // 获取设备位置列表
-export function getDeviceMarkerList<T>(data: IDeviceList): Promise<T> {
-  return request.post('/api/markers', data)
+// export function getDeviceMarkerList<T>(data: any[]): Promise<T> {
+//   return request.post('/api/markers', data)
+// }
+
+// 获取设备位置列表
+export function getDeviceMarkerList<T>(data: any): Promise<T> {
+  return request.post('/api/time_tracks', data)
+}
+
+// 获取设备位置列表
+export function getUserList<T>(data:IDeviceList): Promise<T> {
+  return request.post('/api/markers_user', data)
+}
+
+// 获取报警设备位置列表
+export function getWarnDeviceMarkerList<T>(data: any): Promise<T> {
+  return request.post('/api/warn_markers_imei', data)
 }
 
 // 获取设备历史轨迹
@@ -42,3 +57,5 @@ export function getTimeTracks<T>(imei: number): Promise<T> {
 export function getWarnDeviceMarkers<T>(): Promise<T> {
   return request.get('/api/warn_markers')
 }
+
+

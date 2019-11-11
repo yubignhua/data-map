@@ -1,4 +1,19 @@
-const dateFormat = (d:any, fmt:any) => {
+/*
+ * @Author: your name
+ * @Date: 2019-08-22 15:26:13
+ * @LastEditTime: 2019-11-10 22:51:35
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /data-map/src/utils/dateFormat.ts
+ */
+
+/**
+ * @Date: 
+ * @message: 
+ * @parameter: 'yyyy-MM-dd HH:mm:ss'
+ * @Return: 
+ */ 
+const dateFormat = (d:any, fmt?:any) => {
   if (!d || !fmt) {
     return ''
     // throw new Error('lack date or format')
@@ -6,7 +21,9 @@ const dateFormat = (d:any, fmt:any) => {
   // 转换毫秒和字符串为时间对象
   if (typeof d === 'string' || typeof d === 'number') {
     d = new Date(d)
+    console.log('d: ', d);
   }
+
   // d是NaN的时候返回空
   if (isNaN(d)) return ''
   const dateObj:any = {
