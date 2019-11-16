@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-12 00:06:54
+ * @LastEditTime: 2019-11-12 23:19:38
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -321,14 +321,10 @@ export default class extends Vue {
     if (+status_code !== 200) {
       return this.$elementMessage(message || '轨迹信息获取失败')
     }
-    console.log('requestHistoryTrack:::', data)
+    // console.log('requestHistoryTrack:::', data)
 
-    // this.removeAllOverlay()
-    const fn = R.pipe(
-      this.getPolyLineData,
-      this.addPolyLine
-    )
-    fn(data)
+    this.removeAllOverlay()
+    this.getPolyLineData(data)
   }
 
   /**
@@ -617,7 +613,7 @@ export default class extends Vue {
         return this.handleConverGps([item.lng, item.lat])
       })
     )
-    console.log('resData;;;;', resData)
+    this.addPolyLine(resData)
     return resData
   }
 
@@ -627,14 +623,13 @@ export default class extends Vue {
    * @Return:
    * @Date: 2019-09-30 17:26:22
    */
-  private addPolyLine(testTrack: any[]) {
-    console.log('addPolyLine: ', testTrack)
-    // testTrack = this.testTrack
+  private addPolyLine(promiseData: any) {
     const fn = R.pipe(
       this.hanleTrakData,
       this.createPolyLine
     )
-    const polyline = fn(testTrack)
+    const polyline = fn(promiseData)
+    console.log('polyline: ', polyline)
     this.map.add(polyline)
     this.map.setFitView([polyline])
   }
@@ -807,8 +802,9 @@ export default class extends Vue {
    * @Date: 2019-09-30 17:12:20
    */
   private hanleTrakData(arr: any[]) {
+    console.log('hanleTrakData: ');
     const newArr = arr.map(item => {
-      return new AMap.LngLat(...item)
+      return new AMap.LngLat(item.lng, item.lat)
     })
     return newArr
   }
