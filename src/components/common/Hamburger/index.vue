@@ -4,6 +4,7 @@
     @click="toggleClick">
     <svg-icon
       name="hamburger"
+      class="as_bg"
       width="20"
       height="20" />
   </div>
@@ -27,6 +28,7 @@ export default class extends Vue {
 <style lang="scss" scoped>
 .svg-icon {
   vertical-align: middle;
+  color: #fff;
 }
 
 .is-active {

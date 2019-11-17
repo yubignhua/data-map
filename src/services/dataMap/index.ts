@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-04 17:10:48
- * @LastEditTime: 2019-11-11 22:39:24
+ * @LastEditTime: 2019-11-17 17:22:16
  * @LastEditors: Please set LastEditors
  */
 import request from '@/services/api'
@@ -16,18 +16,23 @@ export function EditDevice<T>(): Promise<T> {
   return request.post('/api/device_editor')
 }
 
+interface IAddDevice{
+  imei: string,
+  device_name: string,
+}
+
 // 添加设备
-export function addDevice<T>(): Promise<T> {
-  return request.post('/api/device_add')
+export function addDevice<T>(data:IAddDevice): Promise<T> {
+  return request.post('/api/device_add', data)
 }
 interface IDeviceList {
   page: number,
   perpage: number,
 }
 // 获取设备位置列表
-// export function getDeviceMarkerList<T>(data: any[]): Promise<T> {
-//   return request.post('/api/markers', data)
-// }
+export function getDeviceList<T>(data: any[]): Promise<T> {
+  return request.post('/api/markers', data)
+}
 
 // 获取设备位置列表
 export function getDeviceMarkerList<T>(data: any): Promise<T> {
@@ -46,8 +51,10 @@ export function getWarnDeviceMarkerList<T>(data: any): Promise<T> {
 
 // 获取设备历史轨迹
 export function getDeviceTracks<T>(imei: number): Promise<T> {
-  return request.post('/api/device_tracks', { imei })
+  // return request.post('/api/device_tracks', { imei })
+  return request.post('/api/device_tracks_wifi_gps', { imei })
 }
+
 
 // 获取实时追踪信息
 export function getTimeTracks<T>(imei: number): Promise<T> {

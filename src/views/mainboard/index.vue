@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-12 23:19:38
+ * @LastEditTime: 2019-11-17 18:07:37
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -39,35 +39,22 @@
           用户列表
         </div>
         <div class="search_box section">
-          <el-input
-            v-model="keyword"
-            size="mini"
-            class="search_btn"
-            placeholder="请输入设备名称,IMEI或ICCID"
-            prefix-icon="el-icon-search"
-            clearable
-            @keyup.enter.native="onSearch"
-          />
+          <el-input v-model="keyword" size="mini" class="search_btn" placeholder="请输入设备名称,IMEI或ICCID" prefix-icon="el-icon-search" clearable @keyup.enter.native="onSearch" />
           <el-button size="mini" type="primary" plain @click="onSearch">搜索</el-button>
         </div>
-        <div class="device_group section">
+        <!-- <div class="device_group section">
           <div style="margin-right:10px">设备分组:</div>
           <el-select v-model="groupValue" size="mini" placeholder="设备分组">
-            <el-option
-              v-for="item in options"
-              :key="item.groupValue"
-              :label="item.label"
-              :value="item.value"
-            />
+            <el-option v-for="item in options" :key="item.groupValue" :label="item.label" :value="item.value" />
           </el-select>
-        </div>
-        <div class="line_state_box section">
+        </div>-->
+        <!-- <div class="line_state_box section">
           <el-radio-group v-model="lineState" @change="onHandleStateChange">
             <el-radio-button size="mini" label="1">在线</el-radio-button>
             <el-radio-button size="mini" label="2">离线</el-radio-button>
             <el-radio-button size="mini" label="3">全部</el-radio-button>
           </el-radio-group>
-        </div>
+        </div>-->
         <div class="content_box">
           <DeviceInfo
             v-for="(item,index) in markers"
@@ -102,7 +89,7 @@
     </div>
   </div>
 </template>
-showPositin
+
 <script lang="ts">
 import { getIndexData } from '@/services/dtsRank/index'
 import { Component, Vue } from 'vue-property-decorator'
@@ -110,7 +97,7 @@ import {
   getAllUser,
   getWarnDeviceMarkerList,
   getUserList,
-  getTracksData,
+  // getTracksData,
   getTimeTracks,
   getDeviceTracks,
   getWarnDeviceMarkers,
@@ -152,6 +139,7 @@ export default class extends Vue {
   private map: any
   // 点对象
   private marker: any = null
+  private polyline: any = null
   // 默认中心点坐标
   private center: any[] = [116.205467, 39.907761]
   // //设置地图显示的缩放级别
@@ -183,42 +171,6 @@ export default class extends Vue {
       console.log('地图加载完成')
     })
     this.requestUserData(this.markerParams)
-    // this.requestCurTracks(363620190320867)
-
-    // const style = [
-    //     {
-    //       url: '../../assets/images/help_logo.png',
-    //       anchor: new AMap.Pixel(6, 6),
-    //       size: new AMap.Size(8, 8)
-    //     },
-    //     {
-    //       url: '../../assets/images/help_logo.png',
-    //       anchor: new AMap.Pixel(3, 3),
-    //       size: new AMap.Size(8, 8)
-    //     },
-    //     {
-    //       url: '../../assets/images/help_logo.png',
-    //       anchor: new AMap.Pixel(4, 4),
-    //       size: new AMap.Size(8, 8)
-    //     }
-    //   ]
-
-    //   var mass = new AMap.MassMarks({
-    //     opacity: 0.8,
-    //     zIndex: 111,
-    //     cursor: 'pointer',
-    //     style: style
-    //   })
-
-    //   mass.setData(massMarkes);
-
-    //   mass.setMap(this.map)
-
-    //   var styleObject = new AMap.StyleObject({
-    //     url: '//vdata.amap.com/icons/b18/1/2.png', // 图标地址
-    //     size: new AMap.Size(11, 11), // 图标大小
-    //     anchor: new AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
-    //   })
   }
 
   beforeDestroy() {
@@ -232,6 +184,8 @@ export default class extends Vue {
    * @Date: 2019-09-30 18:58:06
    */
   private async requestUserData(mData: IMarkerParams) {
+    this.markObjList = []
+    this.markWarnObjList = []
     const resData = await getUserList<IResponseData>(mData)
     const {
       status_code,
@@ -239,18 +193,27 @@ export default class extends Vue {
       message
     } = resData
     console.log('requestUserData resData: ', resData)
-    if (+status_code !== 200)
+    if (+status_code !== 200) {
       return this.$elementMessage(message || '轨迹信息获取失败')
+      clearTimeout(this.timer)
+    }
+    clearTimeout(this.timer)
+    // 渲染正常设备
     const fn = R.pipe(
       this.createUserIdList,
       this.requestDeviceList
     )
+    // 渲染报警设备
     const fn2 = R.pipe(
       this.createUserIdList,
       this.requestWarnMarkerData
     )
     fn(list)
     fn2(list)
+
+    this.timer = setTimeout(() => {
+      this.requestUserData(this.markerParams)
+    }, 60000)
   }
 
   /**
@@ -259,7 +222,6 @@ export default class extends Vue {
    * @Return:
    */
   private async requestDeviceList(list: any[]): Promise<any> {
-    console.log('list=======: ', list)
     const paramData = {
       imei: JSON.stringify({
         imeis: list
@@ -267,16 +229,11 @@ export default class extends Vue {
     }
     const resData = await getDeviceMarkerList<IResponseData>(paramData)
     const { status_code, data, message } = resData
-    console.log('data: ', data)
-    if (+status_code !== 200) {
-      clearTimeout(this.timer)
+    if (+status_code !== 200)
       return this.$elementMessage(message || '轨迹信息获取失败')
-    }
+    this.removeAllOverlay()
     this.drawMarker(data)
     this.createRealMarkerDate(data)
-    this.timer = setTimeout(() => {
-      // this.requestUserData(this.markerParams)
-    }, 120000)
   }
 
   /**
@@ -293,19 +250,13 @@ export default class extends Vue {
       time: '2019-11-04 20:04:16'
     }
     const resData = await getWarnDeviceMarkerList<IResponseData>(paramData)
-    // console.log('resData: ', resData)
     const { status_code, data, message } = resData
     console.log('requestWarnMarkerData: ', resData)
-    if (+status_code !== 200) {
-      clearTimeout(this.timer)
+    if (+status_code !== 200)
       return this.$elementMessage(message || '轨迹信息获取失败')
-    }
-    this.warnMarkers = data
+    // this.warnMarkers = data
     this.drawMarker(data, 2)
     this.createRealMarkerDate(data, 2)
-    this.timer = setTimeout(() => {
-      // this.requestUserData(this.markerParams)
-    }, 1000)
   }
 
   /**
@@ -315,15 +266,13 @@ export default class extends Vue {
    * @Date: 2019-11-03 18:33:52
    */
   private async requestHistoryTrack(imei: number): Promise<any> {
-    console.log('imei: ', imei)
     const resData = await getDeviceTracks<IResponseData>(imei)
     const { status_code, data, message } = resData
     if (+status_code !== 200) {
       return this.$elementMessage(message || '轨迹信息获取失败')
     }
-    // console.log('requestHistoryTrack:::', data)
-
-    this.removeAllOverlay()
+    // this.removeAllOverlay()
+    this.removePolyline(this.polyline)
     this.getPolyLineData(data)
   }
 
@@ -341,13 +290,12 @@ export default class extends Vue {
     }
     const resData = await getDeviceMarkerList<IResponseData>(paramData)
     const { status_code, data, message } = resData
-    console.log('data-----: ', data)
+    console.log('请求当前轨迹坐标 requestCurTracks data-----: ', data)
     if (+status_code !== 200) {
       return this.$elementMessage(message || '轨迹信息获取失败')
     }
 
     const { lat, lng } = data[0]
-
     this.handleConverGps([lng, lat]).then((res: any) => {
       const curMarkObj =
         type === 2 ? this.markWarnObjList[index] : this.markObjList[index]
@@ -360,6 +308,27 @@ export default class extends Vue {
     })
   }
 
+  /**
+   * @message: 显示地图的某个点
+   * @parameter:
+   * @Return:
+   * @Date: 2019-10-02 14:35:51
+   */
+  showMarkerPositin(position: any) {
+    const { index, lt, id, nType } = position
+    this.handleConverGps(lt).then((res: any) => {
+      const curMarkObj =
+        nType === 2 ? this.markWarnObjList[index] : this.markObjList[index]
+      // 更新点标记位置
+      curMarkObj.setPosition([res.lng, res.lat])
+      // 将坐标点设置为可视区域
+      this.map.setFitView([curMarkObj])
+      // 设置显示比例尺
+      // this.map.setZoom(15)
+    })
+  }
+
+  // 创建用户列表的 设备 imei 数组
   private createUserIdList(list: any[]): any[] {
     return list.map(item => {
       return { imei: item.imei }
@@ -407,6 +376,11 @@ export default class extends Vue {
     }
   }
 
+  /**
+   * @message: 获取地址
+   * @params:
+   * @Return:
+   */
   private getAddAddressMark(item: any) {
     const { lng, lat } = item
     return new Promise((resolve, reject) => {
@@ -505,29 +479,6 @@ export default class extends Vue {
   }
 
   /**
-   * @message: 显示地图的某个点
-   * @parameter:
-   * @Return:
-   * @Date: 2019-10-02 14:35:51
-   */
-  showMarkerPositin(position: any) {
-    console.log('position: ', position)
-    const { index, lt, id, nType } = position
-    // this.map.setMap()
-    // this.map.setCenter([116.305467, 39.807761]) // 设置中心点
-    this.handleConverGps(lt).then((res: any) => {
-      const curMarkObj =
-        nType === 2 ? this.markWarnObjList[index] : this.markObjList[index]
-      // 更新点标记位置
-      curMarkObj.setPosition([res.lng, res.lat])
-      // 将坐标点设置为可视区域
-      this.map.setFitView([curMarkObj])
-      // 设置显示比例尺
-      // this.map.setZoom(15)
-    })
-  }
-
-  /**
    * @message: gps 坐标转换高德坐标
    * @parameter:
    * @Return:
@@ -597,8 +548,8 @@ export default class extends Vue {
           })
         })
       })
-    console.log('-markObjList---', this.markObjList)
-    console.log('--markWarnObjList--', this.markWarnObjList)
+    console.log('-正常设备列表: markObjList---', this.markObjList)
+    console.log('--报警设备列表: markWarnObjList--', this.markWarnObjList)
   }
 
   /**
@@ -628,10 +579,9 @@ export default class extends Vue {
       this.hanleTrakData,
       this.createPolyLine
     )
-    const polyline = fn(promiseData)
-    console.log('polyline: ', polyline)
-    this.map.add(polyline)
-    this.map.setFitView([polyline])
+    this.polyline = fn(promiseData)
+    this.map.add(this.polyline)
+    this.map.setFitView([this.polyline])
   }
 
   /**
@@ -642,6 +592,16 @@ export default class extends Vue {
    */
   private removeAllOverlay(): void {
     this.map.clearMap()
+  }
+  /**
+   * @message: 清除地图上所有添加的覆盖物
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-30 18:55:43
+   */
+  private removePolyline(polyline: any): void {
+    if (!polyline) return
+    this.map.remove(polyline)
   }
 
   /**
@@ -673,12 +633,15 @@ export default class extends Vue {
         map.addControl(scale)
         map.addControl(geolocation)
         map.addControl(mapType)
-        this.getCurrentPosition(geolocation)
+        // 获取当前位置信息
+        // this.getCurrentPosition(geolocation)
       }
     )
     // 设置地图主题样式
     map.setMapStyle('amap://styles/whitesmoke')
     // map.setFeatures(['road','point']); // 多个种类要素显示
+    // this.map.setMap()
+    // this.map.setCenter([116.305467, 39.807761]) // 设置中心点
     return map
   }
 
@@ -802,7 +765,7 @@ export default class extends Vue {
    * @Date: 2019-09-30 17:12:20
    */
   private hanleTrakData(arr: any[]) {
-    console.log('hanleTrakData: ');
+    console.log('hanleTrakData: ')
     const newArr = arr.map(item => {
       return new AMap.LngLat(item.lng, item.lat)
     })
@@ -1070,7 +1033,7 @@ export default class extends Vue {
         border-radius: 8px;
         border-radius: 8px;
         position: absolute;
-        top: 210px;
+        top: 110px;
         margin-right: 20px;
         bottom: 20px;
         width: 90%;
@@ -1084,7 +1047,7 @@ export default class extends Vue {
       height: 25%;
       padding: 30px;
       box-sizing: border-box;
-      width: 470px;
+      width: 100%;
       border-radius: 16px;
       margin-bottom: 10px;
       border: solid 1px #006c83;

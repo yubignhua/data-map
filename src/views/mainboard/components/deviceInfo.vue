@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-03 14:12:01
- * @LastEditTime: 2019-11-11 23:33:12
+ * @LastEditTime: 2019-11-17 15:09:31
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -13,7 +13,7 @@
         class="set_positon"
         @click="showPositin({id: data.imei,lt: [data.lng, data.lat], index, nType: type})"
       >
-        <svg-icon name="定位" width="20" height="20" />
+        <!-- <svg-icon name="定位" width="20" height="20" /> -->
       </div>
     </div>
     <div class="position_info line_item">

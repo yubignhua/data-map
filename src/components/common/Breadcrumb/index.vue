@@ -1,19 +1,11 @@
 <template>
-  <el-breadcrumb
-    class="app-breadcrumb"
-    separator="/">
+  <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item
-        v-for="(item, index) in breadcrumbs"
-        :key="item.path">
-        <span
-          v-if="
+      <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
+        <span v-if="
             item.redirect === 'noredirect' || index === breadcrumbs.length - 1
-          "
-          class="no-redirect">{{ item.meta.title }}</span>
-        <a
-          v-else
-          @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
+          " class="no-redirect">{{ item.meta.title }}</span>
+        <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
@@ -86,6 +78,7 @@ export default class extends Vue {
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
   font-weight: 400 !important;
+  color: #97a8be;
 }
 
 .app-breadcrumb.el-breadcrumb {
@@ -97,6 +90,7 @@ export default class extends Vue {
   .no-redirect {
     color: #97a8be;
     cursor: text;
+    color: #fff;
   }
 }
 </style>

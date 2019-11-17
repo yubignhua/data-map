@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-30 11:39:44
- * @LastEditTime: 2019-11-10 22:32:24
+ * @LastEditTime: 2019-11-17 16:39:59
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -16,25 +16,14 @@
           </div>
         </div>
         <div class="search_input_box">
-          <el-input
-            v-model="redarParams.keyword"
-            placeholder="请输入内容"
-            prefix-icon="el-icon-search"
-            clearable
-            @change="onInputChange"
-            @keyup.enter.native="onSearch" />
+          <el-input v-model="redarParams.keyword" placeholder="请输入内容" prefix-icon="el-icon-search" clearable @change="onInputChange" @keyup.enter.native="onSearch" />
           <el-button type="defalut" @click="onSearch">查询</el-button>
-          <el-button type="primary" @click="onAddDevice()">添加设备</el-button>
+          <el-button type="primary" @click="dialogVisible = true">添加设备</el-button>
         </div>
       </div>
 
       <!-- 表单 -->
-      <el-table
-        ref="table"
-        v-loading="loading"
-        :height="tableHeight"
-        :data="tableData"
-        style="width: 100%">
+      <el-table ref="table" v-loading="loading" :height="tableHeight" :data="tableData" style="width: 100%">
         <el-table-column align="center" prop="device_name" label="设备名称" />
         <el-table-column align="center" prop="imei" label="设备码" />
         <el-table-column align="center" prop="address" label="设备所在地址" />
@@ -52,12 +41,7 @@
       </el-table>
       <!-- 分液器 -->
       <div class="pagination_block">
-        <el-pagination
-          :current-page.sync="currentPage"
-          layout="prev, pager, next, jumper"
-          :page-size="20"
-          :total="totalPage"
-          @current-change="onCurrentChange" />
+        <el-pagination :current-page.sync="currentPage" layout="prev, pager, next, jumper" :page-size="20" :total="totalPage" @current-change="onCurrentChange" />
       </div>
     </template>
 
@@ -65,21 +49,15 @@
     <el-dialog title="添加设备" :visible.sync="dialogVisible" width="60%">
       <el-form :model="form">
         <el-form-item label="设备名称" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="form.device_name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="自动定位时间" :label-width="formLabelWidth">
-          <el-input v-model="form.automatic_positioning_time" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="休眠时段" :label-width="formLabelWidth">
-          <el-input v-model="form.gps_sleep_time" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="深度休眠" :label-width="formLabelWidth">
-          <el-input v-model="form.deep_sleep" autocomplete="off"></el-input>
+        <el-form-item label="imei" :label-width="formLabelWidth">
+          <el-input v-model="form.imei" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="onAddDeviceSubmit(form)">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 编辑设备 -->
@@ -110,8 +88,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { TestModule } from '@/store/modules/test'
 import { AppModule } from '@/store/modules/app'
-import { getRadarSchool } from '@/services/dtsRank/index'
-import { getYearTerm } from '@/services/common'
+import { addDevice, getDeviceList } from '@/services/dataMap/index'
 import { setTimeout } from 'timers'
 import { dataList } from '../../mainboard/data'
 
@@ -150,12 +127,14 @@ export default class extends Vue {
   }
   private formLabelWidth = '120px'
   private form = {
-    name: ''
+    name: '',
+    imei: ''
   }
 
   created() {
     const data = {}
     this.tableHeight = document.body.clientHeight - 230 + 'px'
+    this.requetDeviceList(this.redarParams)
   }
 
   /**
@@ -164,27 +143,42 @@ export default class extends Vue {
    * @Return:
    * @Date: 2019-09-20 11:16:47
    */
-  private async requetRedarData(mdata: IReadarParams): Promise<any> {
-    this.loading = true
-    const resData = await getRadarSchool<IResponseData>(mdata)
-    this.loading = false
+  private async requetCreateDevice(mdata: any): Promise<any> {
+    const resData = await addDevice<IResponseData>(mdata)
     const {
-      data: { data, total, date },
+      data,
       ok,
       message
     } = resData
+    console.log('resData: ', resData)
+    this.dialogVisible = false
     if (!ok) {
       return this.$message({
         type: 'error',
         message: message || '网络错误'
       })
     }
-    this.tableData = data
-    this.totalPage = total
-    this.date = date
-    this.$nextTick(() => {
-      (this.$refs.table as any).bodyWrapper.scrollTop = 0
-    })
+  }
+  /**
+   * @message: 获取设备列表
+   * @parameter:
+   * @Return:
+   * @Date: 2019-09-20 11:16:47
+   */
+  private async requetDeviceList(mdata: any): Promise<any> {
+    const resData = await getDeviceList<IResponseData>(mdata)
+    const {
+      data,
+      ok,
+      message
+    } = resData
+    console.log('resData: ', resData)
+    if (!ok) {
+      return this.$message({
+        type: 'error',
+        message: message || '网络错误'
+      })
+    }
   }
 
   /**
@@ -215,18 +209,14 @@ export default class extends Vue {
   private onCurrentChange(e: any): void {
     console.log('onCurrentChange e: ', e)
     this.redarParams.page = e
-    this.requetRedarData(this.redarParams)
   }
 
   // 监听查询按钮
-  private onSearch(): void {
-    this.requetRedarData(this.redarParams)
+  private onSearch(): void {}
+  private onAddDeviceSubmit(form: any) {
+    this.requetCreateDevice(form)
   }
-  // 监听添加设备
-  private onAddDevice(): void {
-    this.dialogVisible = true
-    // this.requetRedarData(this.redarParams)
-  }
+  
 }
 </script>
 
