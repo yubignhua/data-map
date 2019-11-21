@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-22 15:26:13
- * @LastEditTime: 2019-08-22 15:26:13
- * @LastEditors: your name
+ * @LastEditTime: 2019-11-20 22:35:33
+ * @LastEditors: Please set LastEditors
  -->
 <template>
   <div
@@ -83,11 +83,13 @@ export default class extends mixins(ResizeMixin) {
   right: 0;
   z-index: 9;
   width: calc(100% - #{$sideBarWidth});
+  // width: 100%;
   transition: width 0.28s;
   border-bottom: solid 1px #044255;
 }
 
 .sidebar-container {
+  // display: none;
   transition: width 0.28s;
   width: $sideBarWidth !important;
   height: 100%;
@@ -102,15 +104,18 @@ export default class extends mixins(ResizeMixin) {
 
 .hideSidebar {
   .main-container {
-    margin-left: 54px;
+    // margin-left: 54px;
+     margin-left: 0px;
   }
 
   .sidebar-container {
     width: 54px !important;
+    width: 0px !important;
   }
 
   .fixed-header {
-    width: calc(100% - 54px);
+    // width: calc(100% - 54px);
+    width: calc(100% - 0px);
   }
 }
 

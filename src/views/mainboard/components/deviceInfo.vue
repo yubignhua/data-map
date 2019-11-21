@@ -2,26 +2,22 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-03 14:12:01
- * @LastEditTime: 2019-11-17 15:09:31
+ * @LastEditTime: 2019-11-22 00:18:05
  * @LastEditors: Please set LastEditors
  -->
 <template>
   <div class="device_item">
     <div class="device_name line_item">
+      <el-checkbox :checked="data.isShow" v-model="data.isShow" @change="onStateChange"></el-checkbox>
       {{ data.device_name }} ({{ data.imei }})
-      <div
-        class="set_positon"
-        @click="showPositin({id: data.imei,lt: [data.lng, data.lat], index, nType: type})"
-      >
-        <!-- <svg-icon name="定位" width="20" height="20" /> -->
+      <div class="set_positon" @click="showPositin({id: data.imei,lt: [data.lng, data.lat], index, nType: type})">
+        <svg-icon name="定位" width="20" height="20" />
       </div>
     </div>
     <div class="position_info line_item">
       <div class="address">{{ data.address }}</div>
     </div>
-    <div
-      class="device_info line_item"
-    >( · |电量:{{ data.electricity }}%|信号:{{ data.signal_new }}%|更新时间:{{ data.dataTime }} )</div>
+    <div class="device_info line_item">( · |电量:{{ data.electricity }}%|信号:{{ data.signal_new }}%|更新时间:{{ data.dataTime }} )</div>
     <div class="btn_group_box">
       <el-button-group>
         <el-button size="mini" @click="showCurPolyline(data.imei)">实时追踪</el-button>
@@ -42,6 +38,8 @@ export default class extends Vue {
   @Prop({ default: () => [] }) private data!: any
   @Prop({ default: String }) private index!: any
   @Prop({ default: Number }) private type!: any
+
+  private checked = ''
   created() {
     // console.log('this.index', this.index)
   }
@@ -63,6 +61,18 @@ export default class extends Vue {
   private showCurPolyline(id: string) {
     return { id, type: this.type, index: this.index }
   }
+
+  private onStateChange(e: any) {
+    console.log('e: ', e)
+    const data = {
+      id: this.data.imei,
+      lt: [this.data.lng, this.data.lat],
+      index: this.index,
+      nType: this.type,
+      state: e
+    }
+    this.showPositin(data)
+  }
 }
 </script>
 
@@ -73,6 +83,9 @@ export default class extends Vue {
   font-size: 12px;
   border-radius: 5px;
   padding-bottom: 1px;
+  .el-checkbox {
+    margin-right: 0;
+  }
   .device_name {
     padding-top: 10px;
     position: relative;
