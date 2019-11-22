@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-22 00:21:06
+ * @LastEditTime: 2019-11-23 00:39:40
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -39,8 +39,8 @@
           用户列表
         </div>
         <div class="search_box section">
-          <el-input v-model="keyword" size="mini" class="search_btn" placeholder="请输入设备名称,IMEI或ICCID" prefix-icon="el-icon-search" clearable @keyup.enter.native="onSearch" />
-          <el-button size="mini" type="primary" plain @click="onSearch">搜索</el-button>
+          <el-input v-model.trim="keyword" size="mini" class="search_btn" placeholder="请输入设备IMEI" prefix-icon="el-icon-search" clearable @keyup.enter.native="onSearch(keyword)" />
+          <el-button size="mini" type="primary" plain @click="onSearch(keyword)">搜索</el-button>
         </div>
         <!-- <div class="device_group section">
           <div style="margin-right:10px">设备分组:</div>
@@ -101,7 +101,9 @@ import {
   getTimeTracks,
   getDeviceTracks,
   getWarnDeviceMarkers,
-  getDeviceMarkerList
+  getDeviceMarkerList,
+  addDevice,
+  searchData
 } from '@/services/dataMap/index'
 import R from '@/utils/freePiont'
 import { dataList, massMarkes } from './data'
@@ -110,10 +112,10 @@ import { formatCurDate } from '@/utils/index'
 interface IMarkerParams {
   page: number
   perpage: number
-  group: string
-  state: number
-  keyword: string
-  alarm_type?: number
+  // group: string
+  // state: number
+  // keyword: string
+  // alarm_type?: number
 }
 
 @Component({
@@ -152,6 +154,7 @@ export default class extends Vue {
   private markObjList: any[] = []
   private markWarnObjList: any[] = []
   private warnMarkers: any[] = []
+  private stateMap: any = {}
   private markerParams: IMarkerParams = {
     page: 1,
     perpage: 20
@@ -258,7 +261,7 @@ export default class extends Vue {
 
     this.timer = setTimeout(() => {
       this.requestUserData(this.markerParams)
-    }, 60000)
+    }, 120000)
   }
 
   /**
@@ -290,8 +293,8 @@ export default class extends Vue {
     const paramData = {
       imei: JSON.stringify({ imeis: list }),
       // TODO
-      // time: formatCurDate('yyyy-MM-dd HH:mm:ss')
-      time: '2019-11-04 20:04:16'
+      time: formatCurDate('yyyy-MM-dd HH:mm:ss')
+      // time: '2019-11-04 20:04:16'
     }
     const resData = await getWarnDeviceMarkerList<IResponseData>(paramData)
     const { status_code, data, message } = resData
@@ -332,8 +335,8 @@ export default class extends Vue {
         ? {
             imei: JSON.stringify({ imeis: [{ imei: id }] }),
             // TODO
-            // time: formatCurDate('yyyy-MM-dd HH:mm:ss')
-            time: '2019-11-04 20:04:16'
+            time: formatCurDate('yyyy-MM-dd HH:mm:ss')
+            // time: '2019-11-04 20:04:16'
           }
         : {
             imei: JSON.stringify({ imeis: [{ imei: id }] })
@@ -358,15 +361,38 @@ export default class extends Vue {
     })
   }
 
+  private async requestSearch(id: string) {
+    const reqData = {
+      imei: JSON.stringify({ imeis: [{ imei: id }] })
+    }
+    const resData = await searchData<IResponseData>(reqData)
+    console.log('resData: ', resData)
+    const { status_code, data, message } = resData
+    // console.log('data: ', data[0]);
+    if (+status_code !== 200) return this.$elementMessage(message || '信息获取失败')
+    // 渲染正常设备
+    const fn = R.pipe(
+      this.createUserIdList,
+      this.requestDeviceList
+    )
+    fn(data)
+  }
+
   /**
    * @message: 显示地图的某个点
    * @parameter:
    * @Return:
    * @Date: 2019-10-02 14:35:51
    */
-  showMarkerPositin(position: any) {
-    console.log('position: ', position)
+  private showMarkerPositin(position: any) {
+    console.log('showMarkerPositin position: ', position)
     const { index, lt, id, nType, state } = position
+    if (!state) {
+      this.stateMap[id] = 1
+    } else {
+      delete this.stateMap[id]
+    }
+    console.log('this.stateMap', this.stateMap)
     this.handleConverGps(lt).then((res: any) => {
       const curMarkObj = nType === 2 ? this.markWarnObjList[index] : this.markObjList[index]
       // 更新点标记位置
@@ -396,9 +422,12 @@ export default class extends Vue {
    * @Return:
    * @Date: 2019-10-04 22:07:41
    */
-  private onSearch(): void {
-    this.markerParams.keyword = this.keyword
-    this.requestUserData(this.markerParams)
+  private onSearch(keyword: string): void {
+    if (!keyword) {
+      this.requestUserData(this.markerParams)
+      return
+    }
+    this.requestSearch(keyword)
   }
 
   /**
@@ -438,16 +467,22 @@ export default class extends Vue {
    * @Return:
    */
   private getAddAddressMark(item: any) {
+    console.log('item: ', item)
     const { lng, lat } = item
     return new Promise((resolve, reject) => {
-      AMap.service('AMap.Geocoder', function() {
+      AMap.service('AMap.Geocoder', () => {
         const iconMap: any = {
           1: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png',
           2: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
         }
         const content = `<div class="custom-content-marker"><img src="${iconMap[item.dataType]}"></div>`
         item.content = content
-        item.isShow = true
+        if (this.stateMap[item.imei]) {
+          item.isShow = false
+        } else {
+          item.isShow = true
+        }
+
         // 回调函数
         // 实例化Geocoder
         const geocoder = new AMap.Geocoder({
@@ -457,7 +492,6 @@ export default class extends Vue {
         let address = ''
         geocoder.getAddress(lnglatXY, function(status: any, result: any) {
           if (status === 'complete' && result.info === 'OK') {
-            // console.log('result: ', result);
             // 获得了有效的地址信息:
             address = result.regeocode.formattedAddress
             item.address = address
@@ -575,6 +609,11 @@ export default class extends Vue {
               position: [res.lng, res.lat],
               offset: new AMap.Pixel(-13, -30)
             })
+            if (this.stateMap[imei]) {
+              marke.hide()
+            } else {
+              marke.show()
+            }
             // 实例化信息窗体
             let warnDiv = ''
             if (type === 2) {
@@ -850,6 +889,7 @@ export default class extends Vue {
 .el-input--mini .el-input__inner {
   background: #32667c;
   border: none;
+  color: #fff;
 }
 .el-radio-group {
   width: 100%;

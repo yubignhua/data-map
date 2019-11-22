@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-03 14:12:01
- * @LastEditTime: 2019-11-22 00:18:05
+ * @LastEditTime: 2019-11-23 00:24:01
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -10,9 +10,9 @@
     <div class="device_name line_item">
       <el-checkbox :checked="data.isShow" v-model="data.isShow" @change="onStateChange"></el-checkbox>
       {{ data.device_name }} ({{ data.imei }})
-      <div class="set_positon" @click="showPositin({id: data.imei,lt: [data.lng, data.lat], index, nType: type})">
+      <!-- <div class="set_positon" @click="showPositin({id: data.imei,lt: [data.lng, data.lat], index, nType: type})">
         <svg-icon name="定位" width="20" height="20" />
-      </div>
+      </div> -->
     </div>
     <div class="position_info line_item">
       <div class="address">{{ data.address }}</div>
@@ -22,7 +22,7 @@
       <el-button-group>
         <el-button size="mini" @click="showCurPolyline(data.imei)">实时追踪</el-button>
         <el-button size="mini" @click="showPolyline(data.imei)">历史轨迹</el-button>
-        <el-button size="mini">设备设置</el-button>
+        <!-- <el-button size="mini">设备设置</el-button> -->
       </el-button-group>
     </div>
   </div>
