@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-23 00:39:40
+ * @LastEditTime: 2019-11-24 19:57:23
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -593,9 +593,14 @@ export default class extends Vue {
   private drawMarker(markers: any[], type?: number) {
     console.log('markers:------ ', markers)
     this.markObjList = []
-    let mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
+    // let mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
+    let mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419383666267.jpeg'
+      //  let   mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419341141682.jpeg'
+
+
     if (type === 2) {
-      mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png'
+      // mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png'
+      mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419341141682.jpeg'
     }
     markers &&
       markers.forEach(marker => {
@@ -722,6 +727,9 @@ export default class extends Vue {
       map.addControl(scale)
       map.addControl(geolocation)
       map.addControl(mapType)
+      AMap.Icon({
+        size: 20
+      })
       // 获取当前位置信息
       // this.getCurrentPosition(geolocation)
     })
@@ -883,6 +891,10 @@ export default class extends Vue {
 }
 </script>
 <style>
+.amap-icon img{
+  /* width: 60px!important; */
+  height: 30px!important;
+}
 .el-radio-button--medium .el-radio-button__inner {
   padding: 5px 20px;
 }
