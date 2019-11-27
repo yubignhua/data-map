@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-27 22:05:15
+ * @LastEditTime: 2019-11-27 22:16:22
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -459,7 +459,7 @@ export default class extends Vue {
     } else {
       this.markers = madta
     }
-    this.loading = false
+    // this.loading = false
   }
 
   /**
@@ -629,6 +629,7 @@ export default class extends Vue {
               this.markObjList.push(marke)
             }
             const title = `${marker.device_name}(${marker.imei})${warnDiv}`
+            this.loading = false
 
             const content: any[] = []
             content.push(`地址：${address}`)
