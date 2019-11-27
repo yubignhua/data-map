@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-24 19:57:23
+ * @LastEditTime: 2019-11-27 22:05:15
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -16,7 +16,7 @@
       <img class="border_right_bottom bg_border" src="@/assets/images/border_07.png" alt />
       <img class="border_left_top bg_border" src="@/assets/images/border_05.png" alt />
       <img class="border_left_bottom bg_border" src="@/assets/images/border_03.png" alt />
-      <div id="container" />
+      <div id="container" v-loading="loading" />
       <div class="main_bottom">
         <div class="left">
           <!-- <svg-icon name="icon_sos" width="50" height="50" /> -->
@@ -64,8 +64,7 @@
             :type="1"
             @show-cur-polyline="requestCurTracks"
             @show-polyline="requestHistoryTrack"
-            @show-positin="showMarkerPositin"
-          />
+            @show-positin="showMarkerPositin"/>
         </div>
       </div>
       <div class="bottom_content_box">
@@ -82,8 +81,7 @@
             :type="2"
             @show-cur-polyline="requestCurTracks"
             @show-polyline="requestHistoryTrack"
-            @show-positin="showMarkerPositin"
-          />
+            @show-positin="showMarkerPositin"/>
         </div>
       </div>
     </div>
@@ -155,6 +153,7 @@ export default class extends Vue {
   private markWarnObjList: any[] = []
   private warnMarkers: any[] = []
   private stateMap: any = {}
+  private loading: boolean = true
   private markerParams: IMarkerParams = {
     page: 1,
     perpage: 20
@@ -179,13 +178,13 @@ export default class extends Vue {
 
   private showSomeCity() {
     const cityList = [
-      { lng: 91.171961, lat: 29.653482 }, // 拉萨市
-      { lng: 88.885148, lat: 29.267519 }, // 日客则
-      { lng: 97.178452, lat: 31.136875 }, // 昌都
-      { lng: 94.36149, lat: 29.649128 }, // 林芝市
-      { lng: 91.773134, lat: 29.237137 }, // 山南市
-      { lng: 92.051746, lat: 31.478148 }, // 那曲市
-      { lng: 80.105498, lat: 32.503187 } // 阿里地区
+      { lng: 91.171961, lat: 29.653482, desc: '拉萨救援中心 电话4006990999' }, // 拉萨市
+      { lng: 88.885148, lat: 29.267519, desc: '日喀则救援中心 电话4006990999' }, // 日客则
+      { lng: 97.178452, lat: 31.136875, desc: '昌都市救援中心 电话4006990999' }, // 昌都
+      { lng: 94.36149, lat: 29.649128, desc: '昌都市救援中心 电话4006990999' }, // 林芝市
+      { lng: 91.773134, lat: 29.237137, desc: '昌都市救援中心 电话4006990999' }, // 山南市
+      { lng: 92.051746, lat: 31.478148, desc: '昌都市救援中心 电话4006990999' }, // 那曲市
+      { lng: 80.105498, lat: 32.503187, desc: '阿里地区救援中心 电话4006990999' } // 阿里地区
     ]
 
     cityList.forEach(item => {
@@ -196,9 +195,8 @@ export default class extends Vue {
   }
 
   private painPosition(position: any) {
-    const { lng, lat } = position
-    // let mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
-    let mIcon = ''
+    const { lng, lat, desc } = position
+    let mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112721451996343.png'
     this.getMarkAdress(lng, lat).then(address => {
       const lnglats = this.handleConverGps([lng, lat]).then((res: any) => {
         const marke = new AMap.Marker({
@@ -210,16 +208,16 @@ export default class extends Vue {
         })
         // 实例化信息窗体
         // marke.setAnimation('AMAP_ANIMATION_BOUNCE')
-        const title = `${address}`
+        const title = `位置信息`
 
         const content: any[] = []
-        content.push(`地址：${address}`)
+        content.push(`地址：${desc}`)
         // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
         // 鼠标点击marker弹出自定义的信息窗体
-        // AMap.event.addListener(marke, 'click', () => {
-        //   const infoWindow = this.createInfoWindow(title, content)
-        //   infoWindow.open(this.map, marke.getPosition())
-        // })
+        AMap.event.addListener(marke, 'click', () => {
+          const infoWindow = this.createInfoWindow(title, content)
+          infoWindow.open(this.map, marke.getPosition())
+        })
       })
     })
   }
@@ -233,6 +231,7 @@ export default class extends Vue {
   private async requestUserData(mData: IMarkerParams) {
     this.markObjList = []
     this.markWarnObjList = []
+    this.loading = true
     const resData = await getUserList<IResponseData>(mData)
     const {
       status_code,
@@ -312,6 +311,7 @@ export default class extends Vue {
    * @Date: 2019-11-03 18:33:52
    */
   private async requestHistoryTrack(imei: number): Promise<any> {
+    this.loading = true
     const resData = await getDeviceTracks<IResponseData>(imei)
     const { status_code, data, message } = resData
     if (+status_code !== 200) {
@@ -333,14 +333,14 @@ export default class extends Vue {
     const paramData =
       type === 2
         ? {
-            imei: JSON.stringify({ imeis: [{ imei: id }] }),
-            // TODO
-            time: formatCurDate('yyyy-MM-dd HH:mm:ss')
-            // time: '2019-11-04 20:04:16'
-          }
+          imei: JSON.stringify({ imeis: [{ imei: id }] }),
+          // TODO
+          time: formatCurDate('yyyy-MM-dd HH:mm:ss')
+          // time: '2019-11-04 20:04:16'
+        }
         : {
-            imei: JSON.stringify({ imeis: [{ imei: id }] })
-          }
+          imei: JSON.stringify({ imeis: [{ imei: id }] })
+        }
     const requestApi = type === 2 ? getWarnDeviceMarkerList : getDeviceMarkerList
     const resData = await requestApi<IResponseData>(paramData)
     const { status_code, data, message } = resData
@@ -459,6 +459,7 @@ export default class extends Vue {
     } else {
       this.markers = madta
     }
+    this.loading = false
   }
 
   /**
@@ -594,13 +595,11 @@ export default class extends Vue {
     console.log('markers:------ ', markers)
     this.markObjList = []
     // let mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
-    let mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419383666267.jpeg'
-      //  let   mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419341141682.jpeg'
-
+    let mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112721461945708.png'
 
     if (type === 2) {
-      // mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png'
-      mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419341141682.jpeg'
+      mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png'
+      // mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419341141682.jpeg'
     }
     markers &&
       markers.forEach(marker => {
@@ -678,6 +677,7 @@ export default class extends Vue {
     this.polyline = fn(promiseData)
     this.map.add(this.polyline)
     this.map.setFitView([this.polyline])
+    this.loading = false
   }
 
   /**
@@ -727,9 +727,6 @@ export default class extends Vue {
       map.addControl(scale)
       map.addControl(geolocation)
       map.addControl(mapType)
-      AMap.Icon({
-        size: 20
-      })
       // 获取当前位置信息
       // this.getCurrentPosition(geolocation)
     })
@@ -891,9 +888,9 @@ export default class extends Vue {
 }
 </script>
 <style>
-.amap-icon img{
+.amap-icon img {
   /* width: 60px!important; */
-  height: 30px!important;
+  height: 30px !important;
 }
 .el-radio-button--medium .el-radio-button__inner {
   padding: 5px 20px;
