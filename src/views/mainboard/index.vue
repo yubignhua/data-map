@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-29 00:20:23
+ * @LastEditTime: 2019-11-29 00:26:59
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -211,7 +211,7 @@ export default class extends Vue {
         const title = `${desc}`
 
         const content: any[] = []
-        // content.push(`地址：${desc}`)
+        content.push(`地址：${address}`)
         // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
         // 鼠标点击marker弹出自定义的信息窗体
         AMap.event.addListener(marke, 'click', () => {
