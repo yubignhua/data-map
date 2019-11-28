@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-27 22:16:22
+ * @LastEditTime: 2019-11-29 00:20:23
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -64,7 +64,7 @@
             :type="1"
             @show-cur-polyline="requestCurTracks"
             @show-polyline="requestHistoryTrack"
-            @show-positin="showMarkerPositin"/>
+            @show-positin="showMarkerPositin" />
         </div>
       </div>
       <div class="bottom_content_box">
@@ -81,7 +81,7 @@
             :type="2"
             @show-cur-polyline="requestCurTracks"
             @show-polyline="requestHistoryTrack"
-            @show-positin="showMarkerPositin"/>
+            @show-positin="showMarkerPositin" />
         </div>
       </div>
     </div>
@@ -208,10 +208,10 @@ export default class extends Vue {
         })
         // 实例化信息窗体
         // marke.setAnimation('AMAP_ANIMATION_BOUNCE')
-        const title = `位置信息`
+        const title = `${desc}`
 
         const content: any[] = []
-        content.push(`地址：${desc}`)
+        // content.push(`地址：${desc}`)
         // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
         // 鼠标点击marker弹出自定义的信息窗体
         AMap.event.addListener(marke, 'click', () => {
@@ -278,7 +278,7 @@ export default class extends Vue {
     const { status_code, data, message } = resData
     if (+status_code !== 200) return this.$elementMessage(message || '轨迹信息获取失败')
     this.removeAllOverlay()
-    this.drawMarker(data)
+    this.drawMarker(data, 1)
     this.createRealMarkerDate(data)
   }
 
@@ -300,6 +300,8 @@ export default class extends Vue {
     console.log('requestWarnMarkerData: ', resData)
     if (+status_code !== 200) return this.$elementMessage(message || '轨迹信息获取失败')
     // this.warnMarkers = data
+    console.log('----333----this.markObjList: ', this.markObjList)
+
     this.drawMarker(data, 2)
     this.createRealMarkerDate(data, 2)
   }
@@ -329,18 +331,14 @@ export default class extends Vue {
    * @Date: 2019-09-30 18:58:06
    */
   private async requestCurTracks(obj: any) {
+    console.log('obj----: ', obj)
+    console.log('1----this.markObjList: ', this.markObjList)
+
     const { id, type, index } = obj
-    const paramData =
-      type === 2
-        ? {
-          imei: JSON.stringify({ imeis: [{ imei: id }] }),
-          // TODO
-          time: formatCurDate('yyyy-MM-dd HH:mm:ss')
-          // time: '2019-11-04 20:04:16'
-        }
-        : {
-          imei: JSON.stringify({ imeis: [{ imei: id }] })
-        }
+    const paramData = type === 2 ? {
+      imei: JSON.stringify({ imeis: [{ imei: id }] }),
+      time: formatCurDate('yyyy-MM-dd HH:mm:ss') }
+      : { imei: JSON.stringify({ imeis: [{ imei: id }] }) }
     const requestApi = type === 2 ? getWarnDeviceMarkerList : getDeviceMarkerList
     const resData = await requestApi<IResponseData>(paramData)
     const { status_code, data, message } = resData
@@ -352,6 +350,9 @@ export default class extends Vue {
     const { lat, lng } = data[0]
     this.handleConverGps([lng, lat]).then((res: any) => {
       const curMarkObj = type === 2 ? this.markWarnObjList[index] : this.markObjList[index]
+      console.log('this.markObjList: ', this.markObjList)
+      console.log('this.markWarnObjList: ', this.markWarnObjList)
+      console.log('curMarkObj====: ', curMarkObj)
       // 更新点标记位置
       curMarkObj.setPosition([res.lng, res.lat])
       // 将坐标点设置为可视区域
@@ -468,7 +469,6 @@ export default class extends Vue {
    * @Return:
    */
   private getAddAddressMark(item: any) {
-    console.log('item: ', item)
     const { lng, lat } = item
     return new Promise((resolve, reject) => {
       AMap.service('AMap.Geocoder', () => {
@@ -593,7 +593,6 @@ export default class extends Vue {
    */
   private drawMarker(markers: any[], type?: number) {
     console.log('markers:------ ', markers)
-    this.markObjList = []
     // let mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
     let mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112721461945708.png'
 
