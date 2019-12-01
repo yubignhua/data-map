@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-10 15:28:27
- * @LastEditTime: 2019-11-29 00:26:59
+ * @LastEditTime: 2019-12-01 09:27:46
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -331,15 +331,14 @@ export default class extends Vue {
    * @Date: 2019-09-30 18:58:06
    */
   private async requestCurTracks(obj: any) {
-    console.log('obj----: ', obj)
-    console.log('1----this.markObjList: ', this.markObjList)
-
     const { id, type, index } = obj
-    const paramData = type === 2 ? {
-      imei: JSON.stringify({ imeis: [{ imei: id }] }),
-      time: formatCurDate('yyyy-MM-dd HH:mm:ss') }
-      : { imei: JSON.stringify({ imeis: [{ imei: id }] }) }
-    const requestApi = type === 2 ? getWarnDeviceMarkerList : getDeviceMarkerList
+    // const paramData = type === 2 ? {
+    //   imei: JSON.stringify({ imeis: [{ imei: id }] }),
+    //   time: formatCurDate('yyyy-MM-dd HH:mm:ss') }
+    //   : { imei: JSON.stringify({ imeis: [{ imei: id }] }) }
+    // const requestApi = type === 2 ? getWarnDeviceMarkerList : getDeviceMarkerList
+    const paramData = { imei: JSON.stringify({ imeis: [{ imei: id }] }) }
+    const requestApi = getDeviceMarkerList
     const resData = await requestApi<IResponseData>(paramData)
     const { status_code, data, message } = resData
     console.log('请求当前轨迹坐标 requestCurTracks data-----: ', data)
@@ -386,7 +385,6 @@ export default class extends Vue {
    * @Date: 2019-10-02 14:35:51
    */
   private showMarkerPositin(position: any) {
-    console.log('showMarkerPositin position: ', position)
     const { index, lt, id, nType, state } = position
     if (!state) {
       this.stateMap[id] = 1
@@ -592,10 +590,8 @@ export default class extends Vue {
    * @Date: 2019-09-30 19:26:08
    */
   private drawMarker(markers: any[], type?: number) {
-    console.log('markers:------ ', markers)
     // let mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
     let mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112721461945708.png'
-
     if (type === 2) {
       mIcon = '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png'
       // mIcon = 'https://haoweilai-tob-pro-video.oss-cn-beijing.aliyuncs.com/activity_template/2019112419341141682.jpeg'
@@ -619,7 +615,9 @@ export default class extends Vue {
             }
             // 实例化信息窗体
             let warnDiv = ''
+            let updateTimeDes = '更新时间'
             if (type === 2) {
+              updateTimeDes = '报警时间'
               // 设置点标记的动画效果，此处为弹跳效果
               marke.setAnimation('AMAP_ANIMATION_BOUNCE')
               warnDiv = '<span style="font-size:11px;color:#F00;">报警</span>'
@@ -629,11 +627,11 @@ export default class extends Vue {
             }
             const title = `${marker.device_name}(${marker.imei})${warnDiv}`
             this.loading = false
-
+            console.log('updateTimeDes:::', updateTimeDes)
             const content: any[] = []
             content.push(`地址：${address}`)
             content.push(`位置更新于：${marker.dataTime}`)
-            content.push(`设备信息: | 电量:${marker.electricity}% | 信号:${marker.signal_new}% | 更新时间 ${marker.dataTime}`)
+            content.push(`设备信息: | 电量:${marker.electricity}% | 信号:${marker.signal_new}% | ${updateTimeDes} ${marker.dataTime}`)
             // content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>")
             // 鼠标点击marker弹出自定义的信息窗体
             AMap.event.addListener(marke, 'click', () => {
